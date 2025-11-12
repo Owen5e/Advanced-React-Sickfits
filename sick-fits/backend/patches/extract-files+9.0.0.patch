@@ -1,0 +1,22 @@
+patch-package
+--- a/node_modules/extract-files/package.json
++++ b/node_modules/extract-files/package.json
+@@ -24,6 +24,18 @@
+     ".": {
+       "import": "./public/index.mjs",
+       "require": "./public/index.js"
++    },
++    "./public/extractFiles": {
++      "import": "./public/extractFiles.mjs",
++      "require": "./public/extractFiles.js"
++    },
++    "./public/isExtractableFile": {
++      "import": "./public/isExtractableFile.mjs",
++      "require": "./public/isExtractableFile.js"
++    },
++    "./public/ReactNativeFile": {
++      "import": "./public/ReactNativeFile.mjs",
++      "require": "./public/ReactNativeFile.js"
+     },
+     "./public/": "./public/",
+     "./package": "./package.json",

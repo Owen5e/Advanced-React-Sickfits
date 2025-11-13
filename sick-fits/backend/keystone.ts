@@ -15,6 +15,7 @@ import { extendGraphqlSchema } from "./mutations";
 import { OrderItem } from "./schemas/OrderItems";
 import { Order } from "./schemas/Order";
 import { Role } from "./schemas/Role";
+import { permissionsList } from "./schemas/fields";
 
 const databaseURL =
   process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits-tutorial";
@@ -80,7 +81,7 @@ export default withAuth(
     //   TODO: add session values here
     session: withItemData(statelessSessions(sessionConfig), {
       // GraphQL Query to get more information about the user
-      User: "id name email",
+      User: `id name email role { ${permissionsList.join(" ")}}`,
     }),
   })
 );

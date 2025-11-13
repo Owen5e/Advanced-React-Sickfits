@@ -70,4 +70,15 @@ export const rules = {
     // they should only see available products (based on status field)
     return { status: "AVAILABLE" };
   },
+  canManageUsers({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) {
+      return false;
+    }
+    // 1. Do they have permission to manage users
+    if (permissions.canManageUsers({ session })) {
+      return true;
+    }
+    // 2. otherwise they can only update themselves
+    return { id: session.itemId };
+  },
 };

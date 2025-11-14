@@ -7,7 +7,7 @@
     "dev": "set NODE_OPTIONS=--openssl-legacy-provider && next -p 7777",
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && next build",
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && next start -p 7777",
-    "test": "NODE_ENV=test jest --watch"
+    "test": "set NODE_ENV=test && jest --watch"
   },
   "author": "",
   "license": "ISC",
@@ -68,6 +68,22 @@
   "jest": {
     "setupFilesAfterEnv": [
       "./jest.setup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(next)/)"
     ]
   },
   "//": "This is our babel config, I prefer this over a .babelrc file",

@@ -1,0 +1,21 @@
+module.exports = {
+  presets: [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          modules: "commonjs",
+        },
+      },
+    ],
+  ],
+  plugins: [
+    [
+      "styled-components",
+      {
+        ssr: true,
+        displayName: true,
+      },
+    ],
+  ],
+};

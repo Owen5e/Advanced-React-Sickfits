@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+
 const formatMoney = require("../lib/formatMoney").default;
 
 describe("format Money function", () => {

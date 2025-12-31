@@ -5,8 +5,8 @@
   "author": "Wes Bos",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider keystone-next",
-    "seed-data": "cross-env NODE_OPTIONS=--openssl-legacy-provider keystone-next --seed-data",
+    "dev": "keystone-next",
+    "seed-data": "keystone-next --seed-data",
     "postinstall": "patch-package"
   },
   "eslintConfig": {
@@ -49,7 +49,8 @@
     "nodemailer": "^6.4.17",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "stripe": "^8.130.0"
+    "stripe": "^8.130.0",
+    "undici": "^7.16.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.9.0",

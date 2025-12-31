@@ -7,8 +7,16 @@ export default function paginationField() {
       console.log(existing, args, cache);
       const { skip, first } = args;
       //   1. Read the number of items on the page from the cache
-      const data = cache.readQuery({ query: PAGINATION_QUERY });
+      let data;
+      try {
+        data = cache.readQuery({ query: PAGINATION_QUERY });
+      } catch (e) {
+        // Query not in cache yet, go to network
+        return undefined;
+      }
+      if (!data) return undefined;
       const count = data?._allProductsMeta?.count;
+      if (!count) return undefined;
       //   2. Calculate what page we are on
       const page = skip / first + 1;
       // 3. Calculate how many pages there are
@@ -28,7 +36,7 @@ export default function paginationField() {
       if (items.length !== first) {
         //   5. If there are items and there are enough items to satisfy how many were requested
         // Otherwise, we don't have enough items, we must go to the network
-        return false;
+        return undefined;
       }
       if (items.length) {
         console.log(
@@ -37,7 +45,7 @@ export default function paginationField() {
         return items;
       }
       //   6. Fallback to network
-      return false;
+      return undefined;
       // First thing it does is ask the read function for those items
       // We can either do one of two things...
       // 1. Return the items because they are already in the cache

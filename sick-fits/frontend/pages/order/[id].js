@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import Head from 'next/head';
@@ -30,9 +31,11 @@ const SINGLE_ORDER_QUERY = gql`
   }
 `;
 
-export default function SingleOrderPage({ query }) {
+export default function SingleOrderPage() {
+  const router = useRouter();
+  const { id } = router.query;
   const { data, error, loading } = useQuery(SINGLE_ORDER_QUERY, {
-    variables: { id: query.id },
+    variables: { id },
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <ErrorMessage error={error} />;

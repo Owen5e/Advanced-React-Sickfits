@@ -1,18 +1,17 @@
-import { useQuery, gql } from '@apollo/client';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import Product from './Product';
-import { perPage } from '../config';
+import { gql, useQuery } from "@apollo/client";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { perPage } from "../config";
+import Product from "./Product";
 
 export const ALL_PRODUCTS_QUERY = gql`
-  query ALL_PRODUCTS_QUERY($skip: Int = 0, $first: Int) {
-    allProducts(first: $first, skip: $skip) {
+  query ALL_PRODUCTS_QUERY($where: ProductWhereInput) {
+    allProducts(where: $where) {
       id
       name
       price
       description
       photo {
-        id
         image {
           publicUrlTransformed
         }
@@ -27,12 +26,10 @@ const ProductListStyles = styled.div`
   grid-gap: 60px;
 `;
 
-export default function Products({ page }) {
-  // Fetches products for the current page using Apollo's useQuery hook.
-  // 'skip' determines how many products to skip for pagination.
-  // 'first' sets how many products to fetch per page.
+export default function Products({ page, where = {} }) {
   const { data, error, loading } = useQuery(ALL_PRODUCTS_QUERY, {
     variables: {
+      where,
       skip: page * perPage - perPage,
       first: perPage,
     },
@@ -42,7 +39,6 @@ export default function Products({ page }) {
   return (
     <div>
       <ProductListStyles>
-        {/* Renders a grid of Product components for each product fetched */}
         {data.allProducts.map((product) => (
           <Product key={product.id} product={product} />
         ))}
@@ -53,4 +49,5 @@ export default function Products({ page }) {
 
 Products.propTypes = {
   page: PropTypes.number,
+  where: PropTypes.object,
 };

@@ -1,10 +1,9 @@
-import React from 'react';
-import { resetIdCounter, useCombobox } from 'downshift';
-import gql from 'graphql-tag';
-import { useLazyQuery } from '@apollo/client';
-import debounce from 'lodash.debounce';
-import { useRouter } from 'next/dist/client/router';
-import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
+import { useLazyQuery } from "@apollo/client";
+import { resetIdCounter, useCombobox } from "downshift";
+import gql from "graphql-tag";
+import debounce from "lodash.debounce";
+import { useRouter } from "next/dist/client/router";
+import { DropDown, DropDownItem, SearchStyles } from "./styles/DropDown";
 
 const SEARCH_PRODUCTS_QUERY = gql`
   query SEARCH_PRODUCTS_QUERY($searchTerm: String!) {
@@ -32,8 +31,8 @@ export default function Search() {
   const [findItems, { loading, data, error }] = useLazyQuery(
     SEARCH_PRODUCTS_QUERY,
     {
-      fetchPolicy: 'no-cache',
-    }
+      fetchPolicy: "no-cache",
+    },
   );
 
   const items = data?.searchTerms || [];
@@ -51,7 +50,7 @@ export default function Search() {
   } = useCombobox({
     items,
     onInputValueChange() {
-      console.log('input changed');
+      console.log("input changed");
       findItemsButChill({
         variables: {
           searchTerm: inputValue,
@@ -59,30 +58,34 @@ export default function Search() {
       });
     },
     onSelectedItemChange({ selectedItem }) {
-      console.log('Selected item changed', selectedItem);
+      console.log("Selected item changed", selectedItem);
       router.push({ pathname: `/product/${selectedItem.id}` });
     },
-    itemToString: (item) => item?.name || '',
+    itemToString: (item) => item?.name || "",
   });
   return (
     <SearchStyles>
       <div {...getComboboxProps()}>
         <input
           {...getInputProps({
-            type: 'search',
-            placeholder: 'Search for an item',
-            id: 'search',
-            className: loading ? 'loading' : '',
+            type: "search",
+            placeholder: "Search for an item",
+            id: "search",
+            className: loading ? "loading" : "",
           })}
         />
       </div>
       <DropDown {...getMenuProps()}>
         {isOpen &&
-          items.map((item) => (
+          items.map((item, index) => (
             <DropDownItem
               {...getItemProps({ item })}
               key={item.id}
               highlighted={index === highlightedIndex}
+              onClick={() => {
+                console.log("Clicked item", item);
+                router.push({ pathname: `/product/${item.id}` });
+              }}
             >
               <img
                 src={item.photo?.image?.publicUrlTransformed}

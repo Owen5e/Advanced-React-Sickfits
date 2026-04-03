@@ -1,8 +1,10 @@
-import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-import Head from 'next/head';
-import styled from 'styled-components';
-import DisplayError from './ErrorMessage';
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import styled from "styled-components";
+import AddToCart from "./AddToCart";
+import DisplayError from "./ErrorMessage";
 
 const SINGLE_PRODUCT_QUERY = gql`
   query SINGLE_PRODUCT_QUERY($id: ID!) {
@@ -36,6 +38,7 @@ const ProductStyles = styled.div`
 `;
 
 export default function SingleProduct({ id }) {
+  const router = useRouter();
   const { data, loading, error } = useQuery(SINGLE_PRODUCT_QUERY, {
     variables: { id },
   });
@@ -56,6 +59,8 @@ export default function SingleProduct({ id }) {
         <h2>{Product.name}</h2>
         <p>{Product.description}</p>
         <p>${Product.price}</p>
+        <AddToCart id={Product.id} />
+        <button onClick={() => router.back()}>Back</button>
       </div>
     </ProductStyles>
   );

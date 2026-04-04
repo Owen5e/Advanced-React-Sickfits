@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -124,6 +125,7 @@ export default function AISearch({ onResults }) {
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSearch()}
         />
+        {/* eslint-disable-next-line */}
         <Button onClick={handleSearch} disabled={loading}>
           Send
         </Button>
@@ -131,3 +133,7 @@ export default function AISearch({ onResults }) {
     </ChatBox>
   );
 }
+
+AISearch.propTypes = {
+  onResults: PropTypes.func.isRequired,
+};

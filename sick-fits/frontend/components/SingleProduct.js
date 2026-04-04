@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import AddToCart from "./AddToCart";
 import DisplayError from "./ErrorMessage";
@@ -60,10 +61,16 @@ export default function SingleProduct({ id }) {
         <p>{Product.description}</p>
         <p>${Product.price}</p>
         <AddToCart id={Product.id} />
-        <button onClick={() => router.back()}>Back</button>
+        <button type="button" onClick={() => router.back()}>
+          Back
+        </button>
       </div>
     </ProductStyles>
   );
 }
+
+SingleProduct.propTypes = {
+  id: PropTypes.string.isRequired,
+};
 
 export { SINGLE_PRODUCT_QUERY };

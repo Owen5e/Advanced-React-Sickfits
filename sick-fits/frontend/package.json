@@ -45,6 +45,7 @@
     "casual": "^1.6.2",
     "eslint": "^7.14.0",
     "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-next": "^12.3.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-wesbos": "^1.0.1",
     "eslint-plugin-html": "^6.1.1",
@@ -59,7 +60,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "wesbos"
+      "wesbos",
+      "next/core-web-vitals"
     ]
   },
   "jest": {

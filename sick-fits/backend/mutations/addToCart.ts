@@ -1,13 +1,12 @@
 /* eslint-disable */
 import { KeystoneContext } from "@keystone-next/types";
-import { CartItemCreateInput } from "../.keystone/schema-types";
 import { Session } from "../types";
 
 export default async function addToCart(
   root: any,
   { productId }: { productId: string },
   context: KeystoneContext,
-): Promise<CartItemCreateInput> {
+): Promise<any> {
   console.log("Adding to cart!!");
   // 1   query the current user, see if they are signed in
   const sesh = context.session as Session;

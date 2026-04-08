@@ -1,11 +1,18 @@
 // AT it's simplest, the access control returns a yes or no value depending on the users session
 
-import { permissionsList } from "./schemas/fields";
+import { Permission, permissionsList } from "./schemas/fields";
 import { ListAccessArgs } from "./types";
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session;
 }
+
+// Create a type for the permissions object
+type PermissionsObj = {
+  [key in Permission]: ({ session }: ListAccessArgs) => boolean;
+} & {
+  isAwesome: ({ session }: ListAccessArgs) => boolean;
+};
 
 const generatedPermissions = Object.fromEntries(
   permissionsList.map((permission) => [
@@ -13,14 +20,14 @@ const generatedPermissions = Object.fromEntries(
     function ({ session }: ListAccessArgs) {
       return !!session?.data.role?.[permission];
     },
-  ])
-);
+  ]),
+) as { [key in Permission]: ({ session }: ListAccessArgs) => boolean };
 
 // Permission checkers - yes or no
-export const permissions = {
+export const permissions: PermissionsObj = {
   ...generatedPermissions,
   isAwesome({ session }: ListAccessArgs): boolean {
-    return session?.data.name.includes("Owen");
+    return session?.data?.name?.includes("Owen") || false;
   },
 };
 
@@ -42,11 +49,11 @@ export const rules = {
     if (!isSignedIn({ session })) {
       return false;
     }
-    // 1. Do they have permission to manage products
+    // 1. Do they have permission to manage cart
     if (permissions.canManageCart({ session })) {
       return true;
     }
-    // 2. if not, do they own this product?
+    // 2. Otherwise, they can only manage their own cart items
     return { user: { id: session.itemId } };
   },
   canManageOrderItems({ session }: ListAccessArgs) {

@@ -6,7 +6,7 @@ import { Session } from "../types";
 export default async function addToCart(
   root: any,
   { productId }: { productId: string },
-  context: KeystoneContext
+  context: KeystoneContext,
 ): Promise<CartItemCreateInput> {
   console.log("Adding to cart!!");
   // 1   query the current user, see if they are signed in
@@ -20,12 +20,11 @@ export default async function addToCart(
       user: { id: sesh.itemId },
       product: { id: productId },
     },
-    resolveFields: "id,quantity",
   });
   const [existingCartItem] = allCartItems;
   if (existingCartItem) {
     console.log(
-      `There are already ${existingCartItem.quantity} in the cart, increment by 1`
+      `There are already ${existingCartItem.quantity} in the cart, increment by 1`,
     );
     // 3 see if the item is already in their cart
     // 4 if it is, increment by 1

@@ -46,7 +46,10 @@ export default withAuth(
     // @ts-ignore
     server: {
       cors: {
-        origin: true,
+        origin: [
+          process.env.FRONTEND_URL || 'http://localhost:7777',
+          'https://advanced-react-sickfits.vercel.app'
+        ],
         credentials: true,
       },
     },

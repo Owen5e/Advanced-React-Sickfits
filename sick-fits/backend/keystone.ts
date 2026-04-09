@@ -1,24 +1,24 @@
-import "dotenv/config";
-import { config, createSchema } from "@keystone-next/keystone/schema";
-import { createAuth } from "@keystone-next/auth";
+import { createAuth } from '@keystone-next/auth';
+import { config, createSchema } from '@keystone-next/keystone/schema';
 import {
-  withItemData,
   statelessSessions,
-} from "@keystone-next/keystone/session";
-import { User } from "./schemas/User";
-import { Product } from "./schemas/Product";
-import { ProductImage } from "./schemas/ProductImage";
-import { insertSeedData } from "./seed-data";
-import { sendPasswordResetEmail } from "./lib/mail";
-import { CartItem } from "./schemas/CartItem";
-import { extendGraphqlSchema } from "./mutations";
-import { OrderItem } from "./schemas/OrderItems";
-import { Order } from "./schemas/Order";
-import { Role } from "./schemas/Role";
-import { permissionsList } from "./schemas/fields";
+  withItemData,
+} from '@keystone-next/keystone/session';
+import 'dotenv/config';
+import { sendPasswordResetEmail } from './lib/mail';
+import { extendGraphqlSchema } from './mutations';
+import { CartItem } from './schemas/CartItem';
+import { Order } from './schemas/Order';
+import { OrderItem } from './schemas/OrderItems';
+import { Product } from './schemas/Product';
+import { ProductImage } from './schemas/ProductImage';
+import { Role } from './schemas/Role';
+import { User } from './schemas/User';
+import { permissionsList } from './schemas/fields';
+import { insertSeedData } from './seed-data';
 
 const databaseURL =
-  process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits-tutorial";
+  process.env.DATABASE_URL || 'mongodb://localhost/keystone-sick-fits-tutorial';
 
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // how long they stay signed in?
@@ -26,11 +26,11 @@ const sessionConfig = {
 };
 
 const { withAuth } = createAuth({
-  listKey: "User",
-  identityField: "email",
-  secretField: "password",
+  listKey: 'User',
+  identityField: 'email',
+  secretField: 'password',
   initFirstItem: {
-    fields: ["name", "email", "password"],
+    fields: ['name', 'email', 'password'],
     // ToDo: add in initial roles here
   },
   passwordResetLink: {
@@ -46,20 +46,17 @@ export default withAuth(
     // @ts-ignore
     server: {
       cors: {
-        origin: [
-          process.env.FRONTEND_URL || 'http://localhost:7777',
-          'https://advanced-react-sickfits.vercel.app'
-        ],
+        origin: true,
         credentials: true,
       },
     },
     db: {
-      adapter: "mongoose",
+      adapter: 'mongoose',
       url: databaseURL,
       // add data seeding here
       async onConnect(keystone) {
-        console.log("...connected to the database");
-        if (process.argv.includes("--seed-data")) {
+        console.log('...connected to the database');
+        if (process.argv.includes('--seed-data')) {
           await insertSeedData(keystone);
         }
       },
@@ -84,7 +81,7 @@ export default withAuth(
     //   TODO: add session values here
     session: withItemData(statelessSessions(sessionConfig), {
       // GraphQL Query to get more information about the user
-      User: `id name email role { ${permissionsList.join(" ")}}`,
+      User: `id name email role { ${permissionsList.join(' ')}}`,
     }),
-  })
+  }),
 );

@@ -1,0 +1,17 @@
+HTTP/1.1 200 
+Connection: keep-alive
+Content-Length: 96
+access-control-allow-credentials: true
+x-railway-cdn-edge: fastly/cache-lcy-egml8630036-LCY
+content-type: application/json; charset=utf-8
+date: Sat, 04 Apr 2026 21:56:38 GMT
+etag: W/"60-or0MnuoZ2k+Y/J7WY/IFrmvy5lc"
+server: railway-edge
+vary: Origin
+x-powered-by: Express
+x-railway-edge: railway/europe-west4-drams3a
+x-railway-request-id: HLCpAc8zTdiSoh6rYqdHTg
+x-cache: MISS
+x-cache-hits: 0
+x-served-by: cache-lcy-egml8630036-LCY
+

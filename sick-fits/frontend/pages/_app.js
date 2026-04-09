@@ -1,6 +1,6 @@
-import NProgress from 'nprogress';
-import Router from 'next/router';
 import { ApolloProvider } from '@apollo/client';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 import Page from '../components/Page';
 import withData from '../lib/withData';
 
@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps, apollo }) {
     <ApolloProvider client={apollo}>
       <CartStateProvider>
         <Page>
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Component {...pageProps} />
         </Page>
       </CartStateProvider>

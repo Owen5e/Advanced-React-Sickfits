@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
     "wesbos.theme-cobalt2",
     "formulahendry.auto-rename-tag",
     "graphql.vscode-graphql",

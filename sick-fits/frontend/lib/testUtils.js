@@ -13,14 +13,14 @@ const fakeItem = () => ({
     id: 'abc123',
     altText: 'dogs are best',
     image: {
-      publicUrlTransformed: 'dog.jpg',
-    },
+      publicUrlTransformed: 'dog.jpg'
+    }
   },
   name: 'dogs are best',
-  description: 'dogs',
+  description: 'dogs'
 });
 
-const fakeUser = (overrides) => ({
+const fakeUser = overrides => ({
   __typename: 'User',
   id: '4234',
   name: casual.name,
@@ -28,19 +28,19 @@ const fakeUser = (overrides) => ({
   permissions: ['ADMIN'],
   orders: [],
   cart: [],
-  ...overrides,
+  ...overrides
 });
 
 const fakeOrderItem = () => ({
   __typename: 'OrderItem',
   id: casual.uuid,
   image: {
-    image: `${casual.word}.jpg`,
+    image: `${casual.word}.jpg`
   },
   name: casual.words(),
   price: 4234,
   quantity: 1,
-  description: casual.words(),
+  description: casual.words()
 });
 
 const fakeOrder = () => ({
@@ -50,16 +50,16 @@ const fakeOrder = () => ({
   total: 40000,
   items: [fakeOrderItem(), fakeOrderItem()],
   createdAt: '2022-12-11T20:16:13.797Z',
-  user: fakeUser(),
+  user: fakeUser()
 });
 
-const fakeCartItem = (overrides) => ({
+const fakeCartItem = overrides => ({
   __typename: 'CartItem',
   id: 'omg123',
   quantity: 3,
   product: fakeItem(),
   user: fakeUser(),
-  ...overrides,
+  ...overrides
 });
 
 // Fake LocalStorage
@@ -92,18 +92,18 @@ function makePaginationMocksFor(length) {
       result: {
         data: {
           _allProductsMeta: {
-            count: length,
+            count: length
           },
           itemsConnection: {
             __typename: 'aggregate',
             aggregate: {
               count: length,
-              __typename: 'count',
-            },
-          },
-        },
-      },
-    },
+              __typename: 'count'
+            }
+          }
+        }
+      }
+    }
   ];
 }
 
@@ -114,5 +114,5 @@ export {
   fakeUser,
   fakeCartItem,
   fakeOrder,
-  fakeOrderItem,
+  fakeOrderItem
 };

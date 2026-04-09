@@ -33,9 +33,9 @@ export default function RemoveFromCart({ id }) {
     optimisticResponse: {
       deleteCartItem: {
         __typename: 'CartItem',
-        id,
-      },
-    },
+        id
+      }
+    }
   });
   return (
     <BigButton

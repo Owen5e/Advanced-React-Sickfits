@@ -20,7 +20,7 @@ function update(cache, payload) {
 export default function DeleteProduct({ id, children }) {
   const [deleteProduct, { loading }] = useMutation(DELETE_PRODUCT_MUTAATION, {
     variables: { id },
-    update,
+    update
   });
   return (
     <button
@@ -29,7 +29,7 @@ export default function DeleteProduct({ id, children }) {
       onClick={() => {
         if (confirm(`Confirm delete? ${id}`)) {
           console.log('DELETING ITEM', id);
-          deleteProduct().catch((err) => alert(err.message));
+          deleteProduct().catch(err => alert(err.message));
         }
       }}
     >

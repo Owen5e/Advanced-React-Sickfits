@@ -1,6 +1,6 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import styled from "styled-components";
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import styled from 'styled-components';
 
 const ChatBox = styled.div`
   position: fixed;
@@ -57,47 +57,41 @@ const Button = styled.button`
 `;
 
 export default function AISearch({ onResults }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
   async function handleSearch() {
     if (!query.trim()) return;
 
-    setMessages((prev) => [...prev, { text: query, type: "user" }]);
+    setMessages(prev => [...prev, { text: query, type: 'user' }]);
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai-search", {
-        method: "POST",
+      const res = await fetch('/api/ai-search', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query })
       });
 
       const filters = await res.json();
 
-      console.log("AI Filters:", filters);
+      console.log('AI Filters:', filters);
 
       // Pass filters to parent
       onResults(filters);
 
       // Add AI response message
-      setMessages((prev) => [
-        ...prev,
-        { text: `Applied filters for "${query}"`, type: "ai" },
-      ]);
+      setMessages(prev => [...prev, { text: `Applied filters for "${query}"`, type: 'ai' }]);
     } catch (err) {
-      console.error("Search failed", err);
-      setMessages((prev) => [
-        ...prev,
-        { text: "Search failed. Try again.", type: "ai" },
-      ]);
+      console.error('Search failed', err);
+      setMessages(prev => [...prev, { text: 'Search failed. Try again.', type: 'ai' }]);
     }
 
     setLoading(false);
-    setQuery("");
+    setQuery('');
   }
 
   return (
@@ -107,9 +101,9 @@ export default function AISearch({ onResults }) {
           <Message
             key={idx}
             style={{
-              alignSelf: msg.type === "user" ? "flex-end" : "flex-start",
-              background: msg.type === "user" ? "#007bff" : "#f1f1f1",
-              color: msg.type === "user" ? "white" : "black",
+              alignSelf: msg.type === 'user' ? 'flex-end' : 'flex-start',
+              background: msg.type === 'user' ? '#007bff' : '#f1f1f1',
+              color: msg.type === 'user' ? 'white' : 'black'
             }}
           >
             {msg.text}
@@ -122,8 +116,8 @@ export default function AISearch({ onResults }) {
           type="text"
           placeholder="Ask AI to search..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+          onChange={e => setQuery(e.target.value)}
+          onKeyPress={e => e.key === 'Enter' && handleSearch()}
         />
         {/* eslint-disable-next-line */}
         <Button onClick={handleSearch} disabled={loading}>
@@ -135,5 +129,5 @@ export default function AISearch({ onResults }) {
 }
 
 AISearch.propTypes = {
-  onResults: PropTypes.func.isRequired,
+  onResults: PropTypes.func.isRequired
 };

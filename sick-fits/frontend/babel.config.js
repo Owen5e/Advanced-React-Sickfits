@@ -1,21 +1,21 @@
 module.exports = {
   presets: [
     [
-      "next/babel",
+      'next/babel',
       {
-        "preset-env": {
-          modules: "commonjs",
-        },
-      },
-    ],
+        'preset-env': {
+          modules: 'commonjs'
+        }
+      }
+    ]
   ],
   plugins: [
     [
-      "styled-components",
+      'styled-components',
       {
         ssr: true,
-        displayName: true,
-      },
-    ],
-  ],
+        displayName: true
+      }
+    ]
+  ]
 };

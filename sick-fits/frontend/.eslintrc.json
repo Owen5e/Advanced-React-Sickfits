@@ -1,0 +1,16 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "react/jsx-props-no-spreading": "off",
+    "react/display-name": "off",
+    "import/no-anonymous-default-export": "off",
+    "react/no-unescaped-entities": "off",
+    "react/jsx-key": "warn",
+    "react/jsx-no-bind": "warn",
+    "no-unused-vars": "warn",
+    "no-restricted-globals": "warn",
+    "no-plusplus": "warn",
+    "import/no-extraneous-dependencies": "warn",
+    "@next/next/no-img-element": "warn"
+  }
+}

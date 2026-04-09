@@ -35,7 +35,7 @@ export default function SingleOrderPage() {
   const router = useRouter();
   const { id } = router.query;
   const { data, error, loading } = useQuery(SINGLE_ORDER_QUERY, {
-    variables: { id },
+    variables: { id }
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <ErrorMessage error={error} />;
@@ -62,7 +62,7 @@ export default function SingleOrderPage() {
         <span>{order.items.length}</span>
       </p>
       <div className="items">
-        {order.items.map((item) => (
+        {order.items.map(item => (
           <div className="order-item" key={item.id}>
             <img src={item.photo.image.publicUrlTransformed} alt={item.title} />
             <div className="item-details">

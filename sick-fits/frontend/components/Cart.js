@@ -1,14 +1,13 @@
-import React from 'react';
 import styled from 'styled-components';
+import calcTotalPrice from '../lib/calcTotalPrice';
+import { useCart } from '../lib/cartState';
+import formatMoney from '../lib/formatMoney';
+import { Checkout } from './Checkout';
+import RemoveFromCart from './RemoveFromCart';
 import CartStyles from './styles/CartStyles';
 import CloseButton from './styles/CloseButton';
 import Supreme from './styles/Supreme';
 import { useUser } from './User';
-import formatMoney from '../lib/formatMoney';
-import calcTotalPrice from '../lib/calcTotalPrice';
-import { useCart } from '../lib/cartState';
-import RemoveFromCart from './RemoveFromCart';
-import { Checkout } from './Checkout';
 
 const CartItemStyles = styled.li`
   padding: 1rem 0;
@@ -29,11 +28,7 @@ function CartItem({ cartItem }) {
   if (!product) return null;
   return (
     <CartItemStyles>
-      <img
-        src={product.photo.image.publicUrlTransformed}
-        alt={product.name}
-        width={100}
-      />
+      <img src={product.photo.image.publicUrlTransformed} alt={product.name} width={100} />
       <div>
         <h3>{product.name}</h3>
         <p>
@@ -64,12 +59,12 @@ export default function Cart() {
         <CloseButton onClick={closeCart}> &times; </CloseButton>
       </header>
       <ul>
-        {me.cart.map((cartItem) => (
+        {me.cart?.map(cartItem => (
           <CartItem key={cartItem.id} cartItem={cartItem} />
         ))}
       </ul>
       <footer>
-        <p>{formatMoney(calcTotalPrice(me.cart))}</p>
+        <p>{formatMoney(calcTotalPrice(me.cart || []))}</p>
         <Checkout />
       </footer>
     </CartStyles>

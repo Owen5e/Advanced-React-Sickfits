@@ -1,10 +1,10 @@
 import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
-import { getDataFromTree } from '@apollo/client/react/ssr';
 import { HttpLink } from '@apollo/client/link/http';
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import withApollo from 'next-with-apollo';
-import { endpoint, prodEndpoint } from '../config';
 import paginationField from './paginationField';
+import { endpoint } from '../config';
 
 function createClient({ headers, initialState }) {
   return new ApolloClient({
@@ -17,30 +17,28 @@ function createClient({ headers, initialState }) {
             )
           );
         if (networkError)
-          console.log(
-            `[Network error]: ${networkError}. Backend is unreachable. Is it running?`
-          );
+          console.log(`[Network error]: ${networkError}. Backend is unreachable. Is it running?`);
       }),
       // this uses apollo-link-http under the hood, so all the options here come from that package
       new HttpLink({
-        uri: process.env.NODE_ENV === 'development' ? endpoint : prodEndpoint,
+        uri: endpoint,
         fetchOptions: {
-          credentials: 'include',
+          credentials: typeof window !== 'undefined' ? 'include' : 'omit'
         },
         // pass the headers along from this request. This enables SSR with logged in state
-        headers,
-      }),
+        headers
+      })
     ]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
           fields: {
             // TODO: We will add this together!
-            allProducts: paginationField(),
-          },
-        },
-      },
-    }).restore(initialState || {}),
+            allProducts: paginationField()
+          }
+        }
+      }
+    }).restore(initialState || {})
   });
 }
 

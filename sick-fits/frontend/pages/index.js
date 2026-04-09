@@ -1,12 +1,12 @@
-import { useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import styled from "styled-components";
-import AISearch from "../components/AISearch";
-import Pagination from "../components/Pagination";
-import Product from "../components/Product";
-import { ALL_PRODUCTS_QUERY } from "../components/Products";
-import { perPage } from "../config";
+import { useQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import styled from 'styled-components';
+import AISearch from '../components/AISearch';
+import Pagination from '../components/Pagination';
+import Product from '../components/Product';
+import { ALL_PRODUCTS_QUERY } from '../components/Products';
+import { perPage } from '../config';
 
 const ProductListStyles = styled.div`
   // Copy from Products.js for consistency
@@ -28,10 +28,7 @@ export default function Home() {
 
   if (filters.keyword) {
     andConditions.push({
-      OR: [
-        { name_contains_i: filters.keyword },
-        { description_contains_i: filters.keyword },
-      ],
+      OR: [{ name_contains_i: filters.keyword }, { description_contains_i: filters.keyword }]
     });
   }
 
@@ -52,8 +49,8 @@ export default function Home() {
     variables: {
       where,
       skip: page * perPage - perPage,
-      first: perPage,
-    },
+      first: perPage
+    }
   });
 
   return (
@@ -71,7 +68,7 @@ export default function Home() {
       <Pagination page={page} />
 
       <ProductListStyles>
-        {data?.allProducts?.map((product) => (
+        {data?.allProducts?.map(product => (
           <Product key={product.id} product={product} />
         ))}
       </ProductListStyles>

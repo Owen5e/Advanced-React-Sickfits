@@ -1,8 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { perPage } from "../config";
-import Product from "./Product";
+import { gql, useQuery } from '@apollo/client';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { perPage } from '../config';
+import Product from './Product';
 
 export const ALL_PRODUCTS_QUERY = gql`
   query ALL_PRODUCTS_QUERY($where: ProductWhereInput) {
@@ -31,15 +31,15 @@ export default function Products({ page, where = {} }) {
     variables: {
       where,
       skip: page * perPage - perPage,
-      first: perPage,
-    },
+      first: perPage
+    }
   });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div>
       <ProductListStyles>
-        {data.allProducts.map((product) => (
+        {data.allProducts.map(product => (
           <Product key={product.id} product={product} />
         ))}
       </ProductListStyles>
@@ -49,5 +49,5 @@ export default function Products({ page, where = {} }) {
 
 Products.propTypes = {
   page: PropTypes.number,
-  where: PropTypes.object,
+  where: PropTypes.object
 };

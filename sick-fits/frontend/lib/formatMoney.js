@@ -2,7 +2,7 @@ export default function formatMoney(amount = 0) {
   const options = {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 2
   };
 
   // if its a whole dollar amount, no cents

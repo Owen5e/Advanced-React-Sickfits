@@ -63,5 +63,5 @@ export default function Page({ children }) {
 }
 
 Page.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.any
 };

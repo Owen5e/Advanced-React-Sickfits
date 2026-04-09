@@ -17,18 +17,15 @@ const REQUEST_RESET_MUTATION = gql`
 
 export default function RequestReset() {
   const { inputs, handleChange, resetForm } = useForm({
-    email: '',
+    email: ''
   });
 
-  const [signup, { data, loading, error }] = useMutation(
-    REQUEST_RESET_MUTATION,
-    {
-      variables: inputs,
+  const [signup, { data, loading, error }] = useMutation(REQUEST_RESET_MUTATION, {
+    variables: inputs
 
-      // refetch the currently logged in user
-      // refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    }
-  );
+    // refetch the currently logged in user
+    // refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
 
   async function handleSubmit(e) {
     e.preventDefault(); // Prevent the form from submitting
@@ -70,4 +67,4 @@ export default function RequestReset() {
   );
 }
 
-export {REQUEST_RESET_MUTATION};
+export { REQUEST_RESET_MUTATION };

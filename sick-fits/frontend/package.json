@@ -58,12 +58,6 @@
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.1"
   },
-  "eslintConfig": {
-    "extends": [
-      "wesbos",
-      "next/core-web-vitals"
-    ]
-  },
   "jest": {
     "setupFilesAfterEnv": [
       "./jest.setup.js"

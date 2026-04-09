@@ -40,5 +40,6 @@ export function useUser() {
     console.log('Loading user data...');
   }
 
+  console.log('Current user data:', data?.authenticatedItem);
   return data?.authenticatedItem;
 }

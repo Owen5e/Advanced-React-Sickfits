@@ -55,7 +55,7 @@ export default function OrdersPage() {
       </Head>
       <h2>You have {allOrders.length} orders!</h2>
       <OrderUl>
-        {allOrders.map((order) => (
+        {allOrders.map(order => (
           <OrderItemStyles>
             <Link href={`/order/${order.id}`}>
               <a>
@@ -68,7 +68,7 @@ export default function OrdersPage() {
                   <p>{formatMoney(order.total)}</p>
                 </div>
                 <div className="images">
-                  {order.items.map((item) => (
+                  {order.items.map(item => (
                     <img
                       key={`image-${item.id}`}
                       src={item.photo?.image?.publicUrlTransformed}

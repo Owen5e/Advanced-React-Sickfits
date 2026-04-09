@@ -34,25 +34,22 @@ export default function CreateProduct() {
     image: '',
     name: '',
     price: '',
-    description: '',
+    description: ''
   });
-  const [createProduct, { loading, error, data }] = useMutation(
-    CREATE_PRODUCT_MUTATION,
-    {
-      variables: inputs,
-      refetchQueries: [{ query: ALL_PRODUCTS_QUERY }],
-    }
-  );
+  const [createProduct, { loading, error, data }] = useMutation(CREATE_PRODUCT_MUTATION, {
+    variables: inputs,
+    refetchQueries: [{ query: ALL_PRODUCTS_QUERY }]
+  });
   return (
     <Form
-      onSubmit={async (e) => {
+      onSubmit={async e => {
         e.preventDefault();
         // submit the input fields to the backend
         const res = await createProduct();
         clearForm();
         // go to that product's page
         Router.push({
-          pathname: `/product/${res.data.createProduct.id}`,
+          pathname: `/product/${res.data.createProduct.id}`
         });
       }}
     >
@@ -62,13 +59,7 @@ export default function CreateProduct() {
         {data && <p>Success! Your product has been created</p>}
         <label htmlFor="image">
           Image
-          <input
-            required
-            type="file"
-            id="image"
-            name="image"
-            onChange={handleChange}
-          />
+          <input required type="file" id="image" name="image" onChange={handleChange} />
         </label>
         <label htmlFor="name">
           Name

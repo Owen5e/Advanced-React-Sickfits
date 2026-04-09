@@ -22,7 +22,7 @@ export default function paginationField() {
       // 3. Calculate how many pages there are
       const pages = Math.ceil(count / first);
       //   4. Check if we have existing items
-      const items = existing.slice(skip, skip + first).filter((x) => x);
+      const items = existing.slice(skip, skip + first).filter(x => x);
       //   If
       // There are items
       // AND
@@ -39,9 +39,7 @@ export default function paginationField() {
         return undefined;
       }
       if (items.length) {
-        console.log(
-          `There are items in the cache! Gonna return them! ${items.length}`
-        );
+        console.log(`There are items in the cache! Gonna return them! ${items.length}`);
         return items;
       }
       //   6. Fallback to network
@@ -61,6 +59,6 @@ export default function paginationField() {
       }
       //   finally we return the merged items from the cache
       return merged;
-    },
+    }
   };
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
-import DisplayError from './ErrorMessage';
 import useForm from '../lib/useForm';
+import DisplayError from './ErrorMessage';
 import Form from './styles/Form';
 
 const SINGLE_PRODUCT_QUERY = gql`

@@ -1,10 +1,8 @@
-import React from 'react';
-import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
-import Form from './styles/Form';
+import gql from 'graphql-tag';
 import useForm from '../lib/useForm';
-import { CURRENT_USER_QUERY } from './User';
 import Error from './ErrorMessage';
+import Form from './styles/Form';
 
 const RESET_MUTATION = gql`
   mutation RESET_MUTATION($email: String!, $token: String!, $password: String!) {

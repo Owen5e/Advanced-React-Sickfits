@@ -4,10 +4,10 @@ import NProgress from 'nprogress';
 import Page from '../components/Page';
 import withData from '../lib/withData';
 
-// Uncomment this to use default nprogress styles
-// import 'nprogress/nprogress.css';
-import '../components/styles/nprogress.css';
+// Use default nprogress styles
+import 'nprogress/nprogress.css';
 import { CartStateProvider } from '../lib/cartState';
+import '../styles/globals.css';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());

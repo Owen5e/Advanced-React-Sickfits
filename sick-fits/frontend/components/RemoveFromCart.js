@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import React from 'react';
 import styled from 'styled-components';
 
 const BigButton = styled.button`

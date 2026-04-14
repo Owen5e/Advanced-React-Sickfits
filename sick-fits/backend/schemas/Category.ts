@@ -1,5 +1,6 @@
 import { relationship, text } from '@keystone-next/fields';
 import { list } from '@keystone-next/keystone/schema';
+import slugify from '@sindresorhus/slugify';
 import { isSignedIn, rules } from '../access';
 
 export const Category = list({
@@ -8,6 +9,21 @@ export const Category = list({
     read: true, // Everyone can read categories
     update: rules.canManageProducts, // Use same rules as product management for now
     delete: rules.canManageProducts,
+  },
+  hooks: {
+    resolveInput: ({ resolvedData, operation }) => {
+      // Only auto-generate slug on create
+      if (operation === 'create') {
+        const { name } = resolvedData;
+        if (name) {
+          return {
+            ...resolvedData,
+            slug: slugify(name),
+          };
+        }
+      }
+      return resolvedData;
+    },
   },
   fields: {
     name: text({ isRequired: true }),

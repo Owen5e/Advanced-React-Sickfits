@@ -1,7 +1,7 @@
 // AT it's simplest, the access control returns a yes or no value depending on the users session
 
-import { Permission, permissionsList } from "./schemas/fields";
-import { ListAccessArgs } from "./types";
+import { Permission, permissionsList } from './schemas/fields';
+import { ListAccessArgs } from './types';
 
 export function isSignedIn({ session }: ListAccessArgs) {
   return !!session;
@@ -27,7 +27,7 @@ const generatedPermissions = Object.fromEntries(
 export const permissions: PermissionsObj = {
   ...generatedPermissions,
   isAwesome({ session }: ListAccessArgs): boolean {
-    return session?.data?.name?.includes("Owen") || false;
+    return session?.data?.name?.includes('Owen') || false;
   },
 };
 
@@ -72,7 +72,7 @@ export const rules = {
       return true; // They can read everything
     }
     // Everyone else (including unauthenticated users) should only see available products
-    return { status: "Available" };
+    return { status: 'Available' };
   },
   canManageUsers({ session }: ListAccessArgs) {
     if (!isSignedIn({ session })) {
@@ -84,5 +84,17 @@ export const rules = {
     }
     // 2. otherwise they can only update themselves
     return { id: session.itemId };
+  },
+  canManageCategories({ session }: ListAccessArgs) {
+    if (!isSignedIn({ session })) {
+      return false;
+    }
+    // 1. Do they have permission to manage categories
+    if (permissions.canManageCategories({ session })) {
+      return true;
+    }
+    // 2. For now, use same rules as product management
+    // In the future, we might want different rules
+    return false;
   },
 };

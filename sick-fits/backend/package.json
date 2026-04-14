@@ -11,12 +11,6 @@
     "seed-data": "keystone-next --seed-data",
     "postinstall": "patch-package"
   },
-  "eslintConfig": {
-    "extends": "wesbos/typescript.js",
-    "rules": {
-      "@typescript-eslint/no-unsafe-assignment": 0
-    }
-  },
   "babel": {
     "presets": [
       [

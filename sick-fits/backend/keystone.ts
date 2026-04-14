@@ -8,6 +8,7 @@ import 'dotenv/config';
 import { sendPasswordResetEmail } from './lib/mail';
 import { extendGraphqlSchema } from './mutations';
 import { CartItem } from './schemas/CartItem';
+import { Category } from './schemas/Category';
 import { Order } from './schemas/Order';
 import { OrderItem } from './schemas/OrderItems';
 import { Product } from './schemas/Product';
@@ -49,7 +50,7 @@ export default withAuth(
         origin: [
           process.env.FRONTEND_URL || 'http://localhost:7777',
           'https://advanced-react-sickfits.vercel.app',
-          'https://trendyfits-5z7gm0u5t-owens-projects-9e1990f8.vercel.app'
+          'https://trendyfits-5z7gm0u5t-owens-projects-9e1990f8.vercel.app',
         ],
         credentials: true,
       },
@@ -74,6 +75,7 @@ export default withAuth(
       OrderItem,
       Order,
       Role,
+      Category,
     }),
     extendGraphqlSchema,
     ui: {

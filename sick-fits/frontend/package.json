@@ -16,6 +16,7 @@
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-plugin-styled-components": "^2.1.4",
     "date-fns": "^2.16.1",
     "downshift": "^6.0.6",
     "graphql": "16.0.1",
@@ -29,6 +30,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-transition-group": "^4.4.1",
+    "styled-components": "^6.4.0",
     "waait": "^1.0.5"
   },
   "devDependencies": {

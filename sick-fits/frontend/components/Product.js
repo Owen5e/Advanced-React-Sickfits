@@ -22,6 +22,23 @@ export default function Product({ product }) {
         {formatMoney(product.price)}
       </div>
       <p className="leading-8 font-light p-0 px-12 text-base">{product.description}</p>
+
+      {/* Display categories if they exist */}
+      {product.categories && product.categories.length > 0 && (
+        <div className="px-4 py-2">
+          <div className="flex flex-wrap gap-2">
+            {product.categories.map(category => (
+              <span
+                key={category.id}
+                className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded"
+              >
+                {category.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Add buttons to edit and delete items */}
       <div className="buttonList grid w-full border-t border-lightGrey grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-px bg-lightGrey">
         <Link

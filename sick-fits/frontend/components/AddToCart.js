@@ -67,7 +67,12 @@ export default function AddToCart({ id }) {
   };
 
   return (
-    <button type="button" onClick={handleClick} disabled={loading}>
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={loading}
+      className="flex w-full justify-center items-center bg-accent-dark disabled:bg-neutral-400 text-white px-4 py-1 rounded-md text-center text-[12px] font-lg transition-colors disabled:cursor-not-allowed"
+    >
       Add{loading && 'ing'} to Cart 🛒
     </button>
   );

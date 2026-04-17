@@ -15,6 +15,7 @@
     "@apollo/client": "3.6.9",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-styled-components": "^2.1.4",
     "date-fns": "^2.16.1",

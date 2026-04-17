@@ -6,9 +6,8 @@ import Search from './Search';
 
 const Logo = styled.h1`
   font-size: 2rem;
-  background-color: red;
+  background-color: #374151;
   position: relative;
-
   transform: skew(-7deg);
   margin-left: 1rem;
   z-index: 2;
@@ -18,22 +17,42 @@ const Logo = styled.h1`
     padding: 0.5rem 1rem;
     text-transform: uppercase;
     color: white;
+    font-weight: bold;
   }
 `;
 
 const HeaderStyles = styled.header`
+  background-color: #1f2937;
+  color: white;
+  width: 100%;
+  position: relative;
+
   .bar {
-    border-bottom: 10px solid var(--black, black);
-    display: grid;
-    grid-template-columns: auto 1fr;
+    display: flex;
     justify-content: space-between;
-    align-items: stretch;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
   }
 
   .sub-bar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    border-bottom: 1px solid var(--black, black);
+    margin: 0 auto;
+    max-width: 1400px;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    border-bottom: 1px solid #374151;
+  }
+
+  @media (max-width: 768px) {
+    .bar {
+      padding: 1rem;
+    }
+
+    .sub-bar {
+      padding: 0.5rem 1rem;
+    }
   }
 `;
 
@@ -42,7 +61,7 @@ export default function Header() {
     <HeaderStyles>
       <div className="bar">
         <Logo>
-          <Link href="/">Sick Fits</Link>
+          <Link href="/">Trendy Fits</Link>
         </Logo>
         <Nav />
       </div>

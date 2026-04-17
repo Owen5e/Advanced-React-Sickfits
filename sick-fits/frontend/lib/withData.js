@@ -4,9 +4,33 @@ import { HttpLink } from '@apollo/client/link/http';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import withApollo from 'next-with-apollo';
 import paginationField from './paginationField';
-import { endpoint } from '../config';
+
+const localEndpoint = 'http://localhost:3000/api/graphql';
+const prodEndpoint = 'https://advanced-react-sickfits-production.up.railway.app/api/graphql';
+
+function getEndpoint() {
+  // Check environment variable first
+  if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+    // If the env var already includes the full path, use it as-is
+    if (process.env.NEXT_PUBLIC_BACKEND_URL.includes('/api/graphql')) {
+      return process.env.NEXT_PUBLIC_BACKEND_URL;
+    }
+    // Otherwise append the GraphQL path
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/graphql`;
+  }
+
+  // On client-side, check for query parameter
+  if (typeof window !== 'undefined' && window.location.search.includes('useLocal=true')) {
+    return localEndpoint;
+  }
+
+  // Default to production
+  return prodEndpoint;
+}
 
 function createClient({ headers, initialState }) {
+  const endpoint = getEndpoint();
+
   return new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -23,7 +47,7 @@ function createClient({ headers, initialState }) {
       new HttpLink({
         uri: endpoint,
         fetchOptions: {
-          credentials: typeof window !== 'undefined' ? 'include' : 'omit'
+          credentials: 'include' // Always include credentials for session persistence
         },
         // pass the headers along from this request. This enables SSR with logged in state
         headers

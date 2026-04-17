@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default function Category({ category }) {
   return (
-    <div className="bg-white border border-offWhite shadow-custom rounded-lg overflow-hidden">
+    <div className="bg-white border border-neutral-200 shadow-subtle rounded-lg overflow-hidden hover:shadow-elevated transition-shadow">
       {category.image?.image?.publicUrlTransformed && (
         <img
           src={category.image.image.publicUrlTransformed}
@@ -13,16 +13,21 @@ export default function Category({ category }) {
       )}
       <div className="p-6">
         <h3 className="text-2xl font-bold mb-2">
-          <Link href={`/category/${category.slug}`} className="text-black hover:underline">
+          <Link
+            href={`/category/${category.slug}`}
+            className="text-secondary-DEFAULT hover:text-primary-DEFAULT transition-colors"
+          >
             {category.name}
           </Link>
         </h3>
-        {category.description && <p className="text-gray-600 mb-4">{category.description}</p>}
+        {category.description && <p className="text-neutral-600 mb-4">{category.description}</p>}
         <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500">{category.products?.length || 0} products</span>
+          <span className="text-sm text-neutral-500">
+            {category.products?.length || 0} products
+          </span>
           <Link
             href={`/category/${category.slug}`}
-            className="bg-red text-white px-4 py-2 rounded hover:bg-red-dark transition-colors"
+            className="bg-primary-DEFAULT hover:bg-primary-dark text-white px-4 py-2 rounded transition-colors"
           >
             Browse
           </Link>

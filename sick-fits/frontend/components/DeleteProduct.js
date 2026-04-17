@@ -17,7 +17,7 @@ function update(cache, payload) {
   cache.evict(cache.identify(payload.data.deleteProduct));
 }
 
-export default function DeleteProduct({ id, children }) {
+export default function DeleteProduct({ id, children, className = '' }) {
   const [deleteProduct, { loading }] = useMutation(DELETE_PRODUCT_MUTAATION, {
     variables: { id },
     update
@@ -26,6 +26,7 @@ export default function DeleteProduct({ id, children }) {
     <button
       type="button"
       disabled={loading}
+      className={className}
       onClick={() => {
         if (confirm(`Confirm delete? ${id}`)) {
           console.log('DELETING ITEM', id);

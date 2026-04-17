@@ -7,7 +7,7 @@ const ChatBox = styled.div`
   bottom: 20px;
   right: 20px;
   width: 300px;
-  height: 400px;
+  height: 200px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 10px;
@@ -32,20 +32,21 @@ const Message = styled.div`
 
 const InputArea = styled.div`
   display: flex;
+  gap: 10px;
+  width: 100%;
   padding: 10px;
   border-top: 1px solid #ccc;
 `;
 
 const Input = styled.input`
-  flex: 1;
-  padding: 8px;
+  width: 100%;
+  padding: 4px;
   border: 1px solid #ccc;
   border-radius: 5px;
 `;
 
 const Button = styled.button`
-  margin-left: 10px;
-  padding: 8px 12px;
+  padding: 2px 8px;
   background: #007bff;
   color: white;
   border: none;

@@ -5,7 +5,7 @@ export default function Page({ children }) {
   return (
     <div>
       <Header />
-      <div className="max-w-1000 mx-auto p-8">{children}</div>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
     </div>
   );
 }

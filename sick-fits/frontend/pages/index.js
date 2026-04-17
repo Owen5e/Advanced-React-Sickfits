@@ -9,10 +9,10 @@ import { ALL_PRODUCTS_QUERY } from '../components/Products';
 import { perPage } from '../config';
 
 const ProductListStyles = styled.div`
-  // Copy from Products.js for consistency
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 60px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 2rem;
+  margin: 2rem 0;
 `;
 
 export default function Home() {

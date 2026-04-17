@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useState } from 'react';
 import { useCart } from '../lib/cartState';
 import CartCount from './CartCount';
 import SignOut from './SignOut';
@@ -7,14 +8,19 @@ import { useUser } from './User';
 export default function Nav() {
   const user = useUser();
   console.log('Nav - Current user:', user);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const { openCart } = useCart();
 
-  return (
-    <ul className="m-0 p-0 flex items-center justify-self-end text-2xl md:text-xl sm:text-lg gap-2">
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const NavLinks = () => (
+    <>
       <Link
         href="/products"
-        className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
+        className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
       >
         Products
       </Link>
@@ -22,29 +28,32 @@ export default function Nav() {
         <>
           <Link
             href="/order"
-            className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
+            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
           >
             Orders
           </Link>
           <Link
             href="/sell"
-            className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
+            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
           >
             Sell
           </Link>
           <Link
             href="/account"
-            className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
+            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
           >
             Account
           </Link>
-          <SignOut />
+          <div className="block md:py-0 md:px-0">
+            <SignOut />
+          </div>
           <button
             type="button"
             onClick={openCart}
-            className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
+            className="text-white hover:text-primary-light transition-colors font-medium flex items-center md:py-0 md:px-0"
           >
-            My Cart
+            <span>My Cart </span>
+            <span className="ml-1 pb-0.5">🛒 </span>
             <CartCount
               count={
                 user.cart?.reduce(
@@ -57,15 +66,61 @@ export default function Nav() {
         </>
       )}
       {!user && (
-        <>
-          <Link
-            href="/signin"
-            className="px-12 py-4 flex items-center relative uppercase font-black text-base bg-none border-0 cursor-pointer hover:after:w-[calc(100%-60px)] focus:after:w-[calc(100%-60px)] before:content-[''] before:w-0.5 before:bg-gray-200 before:h-full before:left-0 before:absolute before:-skew-x-5 before:top-0 before:bottom-0 after:content-[''] after:h-0.5 after:bg-red after:w-0 after:absolute after:-translate-x-1/2 after:transition-all after:duration-400 after:ease-custom after:left-1/2 after:mt-8"
-          >
-            Sign In
-          </Link>
-        </>
+        <Link
+          href="/signin"
+          className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
+        >
+          Sign In
+        </Link>
       )}
-    </ul>
+    </>
+  );
+
+  return (
+    <>
+      {/* Hamburger menu button for mobile */}
+      <button
+        type="button"
+        className="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary-light rounded-md p-2"
+        onClick={toggleMenu}
+        aria-label="Toggle navigation menu"
+      >
+        <div className="w-6 h-6 flex flex-col justify-center items-center">
+          <span
+            className={`block h-0.5 w-6 bg-white transform transition-transform duration-300 ${
+              isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+            }`}
+          />
+          <span
+            className={`block h-0.5 w-6 bg-white my-1 transition-opacity duration-300 ${
+              isMenuOpen ? 'opacity-0' : 'opacity-100'
+            }`}
+          />
+          <span
+            className={`block h-0.5 w-6 bg-white transform transition-transform duration-300 ${
+              isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* Desktop navigation */}
+      <nav className="hidden md:flex items-center space-x-6">
+        <NavLinks />
+      </nav>
+
+      {/* Mobile navigation menu */}
+      <div
+        className={`md:hidden absolute top-full left-0 right-0 bg-secondary-dark shadow-lg z-50 transition-all duration-300 ease-in-out ${
+          isMenuOpen
+            ? 'opacity-100 transform translate-y-0'
+            : 'opacity-0 transform -translate-y-4 pointer-events-none'
+        }`}
+      >
+        <div className="flex flex-col py-4 px-4">
+          <NavLinks />
+        </div>
+      </div>
+    </>
   );
 }

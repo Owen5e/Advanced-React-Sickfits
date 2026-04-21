@@ -28,7 +28,73 @@ export default function AddToCart({ id }) {
   const user = useUser();
   const [addToCart, { loading, error }] = useMutation(ADD_TO_CART_MUTATION, {
     variables: { id },
-    refetchQueries: [{ query: CURRENT_USER_QUERY }]
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+    optimisticResponse: {
+      __typename: 'Mutation',
+      addToCart: {
+        __typename: 'CartItem',
+        id: `optimistic-${id}`,
+        quantity: 1,
+        product: {
+          __typename: 'Product',
+          id,
+          name: 'Loading...',
+          price: 0,
+          description: '',
+          photo: {
+            __typename: 'ProductImage',
+            image: {
+              __typename: 'CloudinaryImage_File',
+              publicUrlTransformed: ''
+            }
+          }
+        }
+      }
+    },
+    update: (cache, { data: { addToCart } }) => {
+      // First, read the current user query from cache
+      const data = cache.readQuery({ query: CURRENT_USER_QUERY });
+
+      if (data?.authenticatedItem?.cart) {
+        // Check if item already exists in cart
+        const existingItemIndex = data.authenticatedItem.cart.findIndex(
+          item => item.product.id === id
+        );
+
+        if (existingItemIndex > -1) {
+          // Item exists, increment quantity
+          const updatedCart = [...data.authenticatedItem.cart];
+          updatedCart[existingItemIndex] = {
+            ...updatedCart[existingItemIndex],
+            quantity: updatedCart[existingItemIndex].quantity + 1
+          };
+
+          // Write back to cache
+          cache.writeQuery({
+            query: CURRENT_USER_QUERY,
+            data: {
+              ...data,
+              authenticatedItem: {
+                ...data.authenticatedItem,
+                cart: updatedCart
+              }
+            }
+          });
+        } else {
+          // Item doesn't exist, add new item
+          cache.writeQuery({
+            query: CURRENT_USER_QUERY,
+            data: {
+              ...data,
+              authenticatedItem: {
+                ...data.authenticatedItem,
+                cart: [...data.authenticatedItem.cart, addToCart]
+              }
+            }
+          });
+        }
+      }
+    }
   });
 
   if (error) {

@@ -9,22 +9,26 @@ import formatMoney from '../lib/formatMoney';
 
 const USER_ORDERS_QUERY = gql`
   query USER_ORDERS_QUERY {
-    allOrders {
-      id
-      charge
-      total
-      user {
+    authenticatedItem {
+      ... on User {
         id
-      }
-      items {
-        id
+        email
         name
-        description
-        price
-        quantity
-        photo {
-          image {
-            publicUrlTransformed
+        orders {
+          id
+          charge
+          total
+          items {
+            id
+            name
+            description
+            price
+            quantity
+            photo {
+              image {
+                publicUrlTransformed
+              }
+            }
           }
         }
       }
@@ -46,16 +50,17 @@ export default function OrdersPage() {
   const { data, error, loading } = useQuery(USER_ORDERS_QUERY);
   if (loading) return <p>Loading...</p>;
   if (error) return <ErrorMessage error={error} />;
-  const { allOrders } = data;
+  const user = data?.authenticatedItem;
+  const orders = user?.orders || [];
   return (
     <div>
       <Head>
-        <title>Your Orders({allOrders.length})</title>
+        <title>Your Orders({orders.length})</title>
       </Head>
-      <h2>You have {allOrders.length} orders!</h2>
+      <h2>You have {orders.length} orders!</h2>
       <OrderUl>
-        {allOrders.map(order => (
-          <OrderItemStyles>
+        {orders.map(order => (
+          <OrderItemStyles key={order.id}>
             <Link href={`/order/${order.id}`}>
               <a>
                 <div className="order-meta">

@@ -125,34 +125,17 @@ const UPDATE_PASSWORD_MUTATION = gql`
 
 export default function AccountPage() {
   const { data, error, loading } = useQuery(CURRENT_USER_QUERY);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <ErrorMessage error={error} />;
-
   const user = data?.authenticatedItem;
 
-  if (!user) {
-    return (
-      <AccountContainer>
-        <Head>
-          <title>Account | Sick Fits</title>
-        </Head>
-        <AccountSection>
-          <SectionTitle>Account</SectionTitle>
-          <p>Please sign in to view your account.</p>
-          <Link href="/signin">
-            <ActionButton>Sign In</ActionButton>
-          </Link>
-        </AccountSection>
-      </AccountContainer>
-    );
-  }
+  // Compute initial values for the update form based on user data
+  // This needs to be computed before calling useForm
+  const updateFormInitialValues = user
+    ? { name: user.name || '', email: user.email || '' }
+    : { name: '', email: '' };
 
-  // For the update form
-  const { inputs: updateInputs, handleChange: handleUpdateChange } = useForm({
-    name: user.name || '',
-    email: user.email || ''
-  });
+  // For the update form - call hooks unconditionally with computed initial values
+  const { inputs: updateInputs, handleChange: handleUpdateChange } =
+    useForm(updateFormInitialValues);
 
   // For the password form
   const {
@@ -177,6 +160,26 @@ export default function AccountPage() {
       refetchQueries: [{ query: CURRENT_USER_QUERY }]
     }
   );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <ErrorMessage error={error} />;
+
+  if (!user) {
+    return (
+      <AccountContainer>
+        <Head>
+          <title>Account | Sick Fits</title>
+        </Head>
+        <AccountSection>
+          <SectionTitle>Account</SectionTitle>
+          <p>Please sign in to view your account.</p>
+          <Link href="/signin">
+            <ActionButton>Sign In</ActionButton>
+          </Link>
+        </AccountSection>
+      </AccountContainer>
+    );
+  }
 
   const handleUpdateSubmit = async e => {
     e.preventDefault();

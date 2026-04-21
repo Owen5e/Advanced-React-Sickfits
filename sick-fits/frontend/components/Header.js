@@ -1,8 +1,10 @@
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import styled from 'styled-components';
-import Cart from './Cart';
 import Nav from './Nav';
 import Search from './Search';
+
+const Cart = dynamic(() => import('./Cart'), { ssr: false });
 
 const Logo = styled.h1`
   font-size: 2rem;

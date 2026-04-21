@@ -17,6 +17,18 @@ const CheckoutFormStyles = styled.form`
   padding: 1rem;
   display: grid;
   grid-gap: 1rem;
+
+  /* Mobile responsiveness */
+  @media (max-width: 300px) {
+    padding: 0.75rem;
+    grid-gap: 0.75rem;
+  }
+
+  /* Small mobile devices */
+  @media (max-width: 300px) {
+    padding: 0.5rem;
+    grid-gap: 0.5rem;
+  }
 `;
 
 const CREATE_ORDER_MUTATION = gql`

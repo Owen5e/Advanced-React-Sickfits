@@ -25,8 +25,8 @@ export const ALL_CATEGORIES_QUERY = gql`
 
 const CategoryListStyles = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 20px;
   margin: 2rem 0;
 `;
 

@@ -48,8 +48,7 @@ export default withAuth(
     server: {
       cors: {
         origin: [
-          process.env.FRONTEND_URL || 'http://localhost:7777',
-          'https://advanced-react-sickfits.vercel.app',
+          'http://localhost:7777',
           'https://trendyfits-5z7gm0u5t-owens-projects-9e1990f8.vercel.app',
         ],
         credentials: true,

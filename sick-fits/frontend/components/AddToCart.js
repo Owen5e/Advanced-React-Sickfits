@@ -43,6 +43,7 @@ export default function AddToCart({ id }) {
 
   const handleClick = async () => {
     console.log('Add to cart clicked for product:', id);
+    console.log('Current user state:', user);
     if (!id) {
       console.error('Cannot add to cart: product id is undefined');
       return;
@@ -65,7 +66,8 @@ export default function AddToCart({ id }) {
     } catch (err) {
       console.error('Failed to add to cart:', err);
       // Check if error is about authentication
-      if (err.message.includes('not authenticated') || err.message.includes('not logged in')) {
+      if (err.message.includes('not authenticated') || err.message.includes('not logged in') || err.message.includes('You must be logged in')) {
+        console.log('Authentication error detected, redirecting to signin');
         router.push({
           pathname: '/signin',
           query: { from: router.asPath }

@@ -26,74 +26,14 @@ const ADD_TO_CART_MUTATION = gql`
 export default function AddToCart({ id }) {
   const router = useRouter();
   const user = useUser();
-  const [addToCart, { loading, error }] = useMutation(ADD_TO_CART_MUTATION, {
+  const [addToCart, { loading, error, data }] = useMutation(ADD_TO_CART_MUTATION, {
     variables: { id },
     refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    optimisticResponse: {
-      __typename: 'Mutation',
-      addToCart: {
-        __typename: 'CartItem',
-        id: `optimistic-${id}`,
-        quantity: 1,
-        product: {
-          __typename: 'Product',
-          id,
-          name: 'Loading...',
-          price: 0,
-          description: '',
-          photo: {
-            __typename: 'ProductImage',
-            image: {
-              __typename: 'CloudinaryImage_File',
-              publicUrlTransformed: ''
-            }
-          }
-        }
-      }
+    onCompleted: data => {
+      console.log('Add to cart completed:', data);
     },
-    update: (cache, { data: { addToCart } }) => {
-      // First, read the current user query from cache
-      const data = cache.readQuery({ query: CURRENT_USER_QUERY });
-
-      if (data?.authenticatedItem?.cart) {
-        // Check if item already exists in cart
-        const existingItemIndex = data.authenticatedItem.cart.findIndex(
-          item => item.product.id === id
-        );
-
-        if (existingItemIndex > -1) {
-          // Item exists, increment quantity
-          const updatedCart = [...data.authenticatedItem.cart];
-          updatedCart[existingItemIndex] = {
-            ...updatedCart[existingItemIndex],
-            quantity: updatedCart[existingItemIndex].quantity + 1
-          };
-
-          // Write back to cache
-          cache.writeQuery({
-            query: CURRENT_USER_QUERY,
-            data: {
-              ...data,
-              authenticatedItem: {
-                ...data.authenticatedItem,
-                cart: updatedCart
-              }
-            }
-          });
-        } else {
-          // Item doesn't exist, add new item
-          cache.writeQuery({
-            query: CURRENT_USER_QUERY,
-            data: {
-              ...data,
-              authenticatedItem: {
-                ...data.authenticatedItem,
-                cart: [...data.authenticatedItem.cart, addToCart]
-              }
-            }
-          });
-        }
-      }
+    onError: error => {
+      console.error('Add to cart error:', error);
     }
   });
 
@@ -102,6 +42,7 @@ export default function AddToCart({ id }) {
   }
 
   const handleClick = async () => {
+    console.log('Add to cart clicked for product:', id);
     if (!id) {
       console.error('Cannot add to cart: product id is undefined');
       return;
@@ -117,9 +58,10 @@ export default function AddToCart({ id }) {
       return;
     }
 
+    console.log('User is logged in, calling addToCart mutation');
     try {
-      await addToCart();
-      console.log('Product added to cart successfully');
+      const result = await addToCart();
+      console.log('Add to cart result:', result);
     } catch (err) {
       console.error('Failed to add to cart:', err);
       // Check if error is about authentication

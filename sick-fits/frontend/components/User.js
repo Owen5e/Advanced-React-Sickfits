@@ -41,5 +41,7 @@ export function useUser() {
   }
 
   console.log('Current user data:', data?.authenticatedItem);
+  console.log('Cart items:', data?.authenticatedItem?.cart);
+
   return data?.authenticatedItem;
 }

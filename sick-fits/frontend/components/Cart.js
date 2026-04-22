@@ -7,7 +7,12 @@ import { useUser } from './User';
 
 function CartItem({ cartItem }) {
   const { product } = cartItem;
-  if (!product) return null;
+  console.log('CartItem - cartItem:', cartItem);
+  console.log('CartItem - product:', product);
+  if (!product) {
+    console.log('CartItem - no product, returning null');
+    return null;
+  }
 
   return (
     <li className="flex items-center justify-between py-4 border-b border-neutral-200">
@@ -39,7 +44,11 @@ export default function Cart() {
   const me = useUser();
   const { cartOpen, closeCart } = useCart();
 
+  console.log('Cart component - me:', me);
+  console.log('Cart component - me.cart:', me?.cart);
+
   if (!me) {
+    console.log('Cart component - no user, returning null');
     return null;
   }
 
@@ -47,9 +56,12 @@ export default function Cart() {
   const isEmpty = cartItems.length === 0;
   const totalPrice = calcTotalPrice(cartItems);
 
+  console.log('Cart component - cartItems:', cartItems);
+  console.log('Cart component - isEmpty:', isEmpty);
+
   return (
     <div
-      className={`fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-custom ${
+      className={`fixed inset-y-0 right-0 w-full md:w-150 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-custom ${
         cartOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
       style={{ maxWidth: '28rem' }}
@@ -77,9 +89,9 @@ export default function Cart() {
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-2">
           {isEmpty ? (
-            <div className="h-full flex flex-col items-center justify-center text-center py-12">
+            <div className="h-full flex flex-col items-center justify-center text-center py-6">
               <div className="w-24 h-24 mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
                 <svg
                   className="w-12 h-12 text-neutral-400"
@@ -115,8 +127,8 @@ export default function Cart() {
 
         {/* Footer */}
         {!isEmpty && (
-          <div className="border-t border-neutral-200 px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
+          <div className="border-t border-neutral-200 px-6 py-2">
+            <div className="flex items-center justify-between mb-2">
               <span className="text-lg font-semibold text-neutral-700">Total</span>
               <span className="text-2xl font-bold text-primary">{formatMoney(totalPrice)}</span>
             </div>
@@ -124,12 +136,12 @@ export default function Cart() {
               <Checkout />
               <button
                 onClick={closeCart}
-                className="w-full py-3 border-2 border-neutral-300 text-neutral-700 font-medium rounded-lg hover:bg-neutral-50 transition-colors"
+                className="w-full py-1 border-2 border-neutral-300 text-neutral-700 font-medium rounded-lg hover:bg-neutral-50 transition-colors"
               >
                 Continue Shopping
               </button>
             </div>
-            <p className="text-xs text-neutral-400 text-center mt-4">
+            <p className="text-xs text-neutral-400 text-center mt-1">
               Free shipping on orders over $50
             </p>
           </div>

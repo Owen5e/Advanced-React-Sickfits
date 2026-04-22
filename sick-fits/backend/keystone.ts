@@ -49,7 +49,9 @@ export default withAuth(
       cors: {
         origin: [
           'http://localhost:7777',
-          'https://trendyfits-5z7gm0u5t-owens-projects-9e1990f8.vercel.app',
+          'https://trendyfits-ah7ve65rl-owens-projects-9e1990f8.vercel.app',
+          process.env.FRONTEND_URL ||
+            'https://trendyfits-ah7ve65rl-owens-projects-9e1990f8.vercel.app',
         ],
         credentials: true,
       },

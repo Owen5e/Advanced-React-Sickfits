@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: false,
   images: {
-    domains: ['your-backend-domain.com'] // Replace with your actual backend domain
+    domains: ['advanced-react-sickfits-production.up.railway.app']
   }
   // async rewrites() {
   //   return [

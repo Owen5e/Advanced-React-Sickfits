@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import Head from 'next/head';
 import Link from 'next/link';
+import { FaArrowLeftLong, FaArrowRightLong } from 'react-icons/fa6';
 import { perPage } from '../config';
 import DisplayError from './ErrorMessage';
 import PaginationStyles from './styles/PaginationStyles';
@@ -26,18 +27,23 @@ export default function Pagination({ page }) {
     <PaginationStyles data-testid="pagination">
       <Head>
         <title>
-          Sick fits - page {page} of {pageCount}
+          Trendy fits - page {page} of {pageCount}
         </title>
       </Head>
       <Link href={`/products/${page - 1}`}>
-        <a aria-disabled={page <= 1}> -- Prev</a>
+        <a aria-disabled={page <= 1} className="flex items-center gap-1">
+          {' '}
+          <FaArrowLeftLong /> Prev
+        </a>
       </Link>
       <p>
         page {page} of <span data-testid="pageCount">{pageCount}</span>
       </p>
-      <p> {count} Items Total</p>
+      <p className="hidden md:block"> {count} Items Total</p>
       <Link href={`/products/${page + 1}`}>
-        <a aria-disabled={page >= pageCount}>Next -- </a>
+        <a aria-disabled={page >= pageCount} className="flex items-center gap-1">
+          Next <FaArrowRightLong />{' '}
+        </a>
       </Link>
     </PaginationStyles>
   );

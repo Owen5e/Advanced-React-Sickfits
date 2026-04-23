@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../lib/cartState';
 import CartCount from './CartCount';
 import SignOut from './SignOut';
@@ -9,8 +9,25 @@ export default function Nav() {
   const user = useUser();
   console.log('Nav - Current user:', user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const { openCart } = useCart();
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -77,7 +94,7 @@ export default function Nav() {
   );
 
   return (
-    <>
+    <div ref={menuRef}>
       {/* Hamburger menu button for mobile */}
       <button
         type="button"
@@ -121,6 +138,6 @@ export default function Nav() {
           <NavLinks />
         </div>
       </div>
-    </>
+    </div>
   );
 }

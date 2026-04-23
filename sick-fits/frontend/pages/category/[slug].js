@@ -39,19 +39,68 @@ const CATEGORY_PRODUCTS_QUERY = gql`
 const CategoryHeader = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 4rem 2rem;
+  padding: 1rem 2rem;
   text-align: center;
   margin-bottom: 3rem;
   border-radius: 0 0 20px 20px;
+
+  h1 {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    img {
+      width: 80px !important;
+      height: 80px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    img {
+      width: 64px !important;
+      height: 64px !important;
+    }
+  }
 `;
 
 const ProductListStyles = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 60px;
   max-width: var(--maxWidth);
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-gap: 30px;
+    padding: 1rem 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-gap: 20px;
+    padding: 0.5rem 0.25rem;
+  }
 `;
 
 export default function CategoryPage() {
@@ -86,14 +135,11 @@ export default function CategoryPage() {
             className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
           />
         )}
-        <h1 className="text-4xl font-bold mb-2">{category.name}</h1>
-        {category.description && (
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">{category.description}</p>
-        )}
+        <h1 className="text-4xl font-bold ">{category.name}</h1>
       </CategoryHeader>
 
-      <div className="text-center mb-8">
-        <p className="text-gray-600">
+      <div className="text-center mb-8 px-4">
+        <p className="text-gray-600 text-sm md:text-base">
           Showing {category.products.length} products in this category
         </p>
       </div>

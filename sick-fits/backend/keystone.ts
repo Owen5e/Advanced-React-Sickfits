@@ -53,8 +53,7 @@ export default withAuth(
           'http://localhost:7777',
           'https://trendyfits-ah7ve65rl-owens-projects-9e1990f8.vercel.app',
           'https://trendyfits.vercel.app',
-          process.env.FRONTEND_URL ||
-            'https://trendyfits-ah7ve65rl-owens-projects-9e1990f8.vercel.app',
+          process.env.FRONTEND_URL || 'https://trendyfits.vercel.app',
         ],
         credentials: true,
       },

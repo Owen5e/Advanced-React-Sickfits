@@ -14,76 +14,48 @@ export default async function addToCart(
     throw new Error('You must be logged in to do this!');
   }
   // 2 query the current user's cart
+  // Use context.lists.CartItem.findMany() - the access control (rules.canOrder)
+  // automatically filters to only the current user's cart items
   let allCartItems;
   try {
-    // Use GraphQL API to find cart items - this properly handles relationship filters
-    // and access control in production
-    const graphqlResult = await context.graphql.run({
-      query: `
-        query GetUserCartItems($userId: ID!, $productId: ID!) {
-          allCartItems(where: { user: { id: $userId }, product: { id: $productId } }) {
-            id
-            quantity
-            product {
+    console.log('Fetching cart items for user:', sesh.itemId);
+    // Get all cart items for the current user (access control handles the user filter)
+    allCartItems = await context.lists.CartItem.findMany({});
+    console.log('All cart items for user:', allCartItems);
+
+    // Filter by product ID in JavaScript since relationship filters
+    // don't work reliably in context.lists
+    const filteredItems = [];
+    for (const item of allCartItems) {
+      // Use GraphQL to get the full item with product relationship
+      const fullItemResult = await context.graphql.run({
+        query: `
+          query GetCartItem($id: ID!) {
+            CartItem(where: { id: $id }) {
               id
-            }
-          }
-        }
-      `,
-      variables: {
-        userId: sesh.itemId,
-        productId: productId,
-      },
-    });
-    allCartItems = graphqlResult.allCartItems || [];
-    console.log('All cart items for user and product:', allCartItems);
-  } catch (error: any) {
-    console.error('Error finding cart items via GraphQL:', error);
-    console.log('Session itemId:', sesh.itemId);
-    console.log('Product ID:', productId);
-
-    // Fallback: use context.lists to get all cart items for the user
-    try {
-      console.log('Falling back to context.lists...');
-      allCartItems = await context.lists.CartItem.findMany({
-        where: {
-          user: { id: sesh.itemId },
-        },
-      });
-      console.log('All cart items for user:', allCartItems);
-
-      // Filter in JS by checking each item's product relationship
-      const filteredItems = [];
-      for (const item of allCartItems) {
-        // Use GraphQL to get the full item with product relationship
-        const fullItemResult = await context.graphql.run({
-          query: `
-            query GetCartItem($id: ID!) {
-              CartItem(where: { id: $id }) {
+              quantity
+              product {
                 id
-                quantity
-                product {
-                  id
-                }
               }
             }
-          `,
-          variables: { id: item.id },
-        });
-        const fullItem = fullItemResult.CartItem;
-        // Check if product matches - product could be an object with id or just an id string
-        const itemProductId =
-          fullItem?.product?.id || fullItem?.product || null;
-        if (itemProductId && String(itemProductId) === String(productId)) {
-          filteredItems.push(fullItem);
-        }
+          }
+        `,
+        variables: { id: item.id },
+      });
+      const fullItem = fullItemResult.CartItem;
+      // Check if product matches - product could be an object with id or just an id string
+      const itemProductId = fullItem?.product?.id || fullItem?.product || null;
+      if (itemProductId && String(itemProductId) === String(productId)) {
+        filteredItems.push(fullItem);
       }
-      allCartItems = filteredItems;
-      console.log('Filtered cart items for product (JS):', allCartItems);
-    } catch (fallbackError) {
-      console.error('Fallback also failed:', fallbackError);
-      throw error; // Throw the original error
     }
+    allCartItems = filteredItems;
+    console.log('Filtered cart items for product (JS):', allCartItems);
+  } catch (error: any) {
+    console.error('Error finding cart items:', error);
+    console.log('Session itemId:', sesh.itemId);
+    console.log('Product ID:', productId);
+    throw new Error('Failed to find cart items. Please try again.');
   }
 
   const [existingCartItem] = allCartItems;
@@ -132,10 +104,37 @@ export default async function addToCart(
     return updateResult.updateCartItem;
   }
   // 5 if it is not, create a new cart item for that user
-  return await context.lists.CartItem.createOne({
-    data: {
-      product: { connect: { id: productId } },
-      user: { connect: { id: sesh.itemId } },
-    },
-  });
+  console.log('Creating new cart item...');
+  try {
+    // Use GraphQL to create the cart item
+    const createResult = await context.graphql.run({
+      query: `
+        mutation CreateCartItem($productId: ID!, $userId: ID!) {
+          createCartItem(data: { product: { connect: { id: $productId } }, user: { connect: { id: $userId } } }) {
+            id
+            quantity
+            product {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        productId: productId,
+        userId: sesh.itemId,
+      },
+    });
+    console.log('Create result:', createResult);
+    return createResult.createCartItem;
+  } catch (createError: any) {
+    console.error('Error creating cart item via GraphQL:', createError);
+    // Fallback to context.lists
+    console.log('Falling back to context.lists for create...');
+    return await context.lists.CartItem.createOne({
+      data: {
+        product: { connect: { id: productId } },
+        user: { connect: { id: sesh.itemId } },
+      },
+    });
+  }
 }

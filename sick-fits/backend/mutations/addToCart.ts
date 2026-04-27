@@ -16,28 +16,35 @@ export default async function addToCart(
   // 2 query the current user's cart
   let allCartItems;
   try {
-    // Try to find cart items for this user AND this product
-    // Using simpler syntax without 'equals'
-    allCartItems = await context.lists.CartItem.findMany({
-      where: {
-        user: { id: sesh.itemId },
-        product: { id: productId },
+    // Use GraphQL API to find cart items - this properly handles relationship filters
+    // and access control in production
+    const graphqlResult = await context.graphql.run({
+      query: `
+        query GetUserCartItems($userId: ID!, $productId: ID!) {
+          allCartItems(where: { user: { id: $userId }, product: { id: $productId } }) {
+            id
+            quantity
+            product {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        userId: sesh.itemId,
+        productId: productId,
       },
     });
+    allCartItems = graphqlResult.allCartItems || [];
     console.log('All cart items for user and product:', allCartItems);
   } catch (error: any) {
-    console.error('Error finding cart items:', error);
+    console.error('Error finding cart items via GraphQL:', error);
     console.log('Session itemId:', sesh.itemId);
     console.log('Product ID:', productId);
 
-    // If we get a permission error, fall back to fetching all and filtering in JS
-    if (
-      error.message?.includes('access') ||
-      error.message?.includes('permission') ||
-      error.message?.includes('You do not have access')
-    ) {
-      console.log('Permission error, falling back to JS filtering...');
-      // Fetch all cart items for the user
+    // Fallback: use context.lists to get all cart items for the user
+    try {
+      console.log('Falling back to context.lists...');
       allCartItems = await context.lists.CartItem.findMany({
         where: {
           user: { id: sesh.itemId },
@@ -45,25 +52,37 @@ export default async function addToCart(
       });
       console.log('All cart items for user:', allCartItems);
 
-      // We need to fetch each product separately since we can't include it in the query
-      // This is inefficient but works
+      // Filter in JS by checking each item's product relationship
       const filteredItems = [];
       for (const item of allCartItems) {
-        // Fetch the full cart item with product relationship using findOne
-        // Note: We can't use query parameter, so we'll get whatever fields are returned
-        const fullItem = await context.lists.CartItem.findOne({
-          where: { id: item.id },
+        // Use GraphQL to get the full item with product relationship
+        const fullItemResult = await context.graphql.run({
+          query: `
+            query GetCartItem($id: ID!) {
+              CartItem(where: { id: $id }) {
+                id
+                quantity
+                product {
+                  id
+                }
+              }
+            }
+          `,
+          variables: { id: item.id },
         });
-        // We need to check if fullItem has product relationship
-        // Since we can't specify fields, we'll assume it includes product
-        if (fullItem && fullItem.product && fullItem.product.id === productId) {
+        const fullItem = fullItemResult.CartItem;
+        // Check if product matches - product could be an object with id or just an id string
+        const itemProductId =
+          fullItem?.product?.id || fullItem?.product || null;
+        if (itemProductId && String(itemProductId) === String(productId)) {
           filteredItems.push(fullItem);
         }
       }
       allCartItems = filteredItems;
       console.log('Filtered cart items for product (JS):', allCartItems);
-    } else {
-      throw error;
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError);
+      throw error; // Throw the original error
     }
   }
 

@@ -26,7 +26,7 @@ export default function Category({ category }) {
         </div>
       </div>
       {category.image?.image?.publicUrlTransformed && (
-        <div className="w-2/5 flex-shrink-0 pr-2">
+        <div className="w-2/5 flex-shrink-0 pr-2 ">
           <img
             src={category.image.image.publicUrlTransformed}
             alt={category.image.altText || category.name}

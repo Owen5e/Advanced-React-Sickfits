@@ -56,6 +56,8 @@ export default withAuth(
           process.env.FRONTEND_URL || 'https://trendyfits.vercel.app',
         ],
         credentials: true,
+        methods: ['GET', 'POST', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
       },
     },
     db: {

@@ -8,35 +8,37 @@ export default async function addToCart(
 ): Promise<any> {
   console.log('Adding to cart!!');
 
-  // 1. Get the current user via GraphQL instead of context.session
-  // This works around a session propagation issue in Keystone custom mutations
-  // where context.session may be null even when the user is authenticated
+  // 1. Get the current user ID
+  // Try multiple approaches to get the user session since context.session
+  // may not be available in custom mutations in production
   let currentUserId: string | null = null;
-  try {
-    const userResult = await context.graphql.run({
-      query: `
-        query GetCurrentUser {
-          authenticatedItem {
-            ... on User {
-              id
-            }
-          }
-        }
-      `,
-      variables: {},
-    });
-    console.log('User result from GraphQL:', userResult);
-    currentUserId = userResult?.authenticatedItem?.id || null;
-  } catch (error: any) {
-    console.error('Error getting current user via GraphQL:', error);
+
+  // Approach 1: Try context.session (works locally, may not work in production)
+  const sesh = context.session as any;
+  if (sesh?.itemId) {
+    console.log('Got user from context.session');
+    currentUserId = sesh.itemId;
   }
 
-  // Fallback to context.session if GraphQL didn't work
+  // Approach 2: Try context.graphql.run() with authenticatedItem
   if (!currentUserId) {
-    const sesh = context.session as any;
-    console.log('Falling back to context.session:', sesh);
-    if (sesh?.itemId) {
-      currentUserId = sesh.itemId;
+    try {
+      const userResult = await context.graphql.run({
+        query: `
+          query GetCurrentUser {
+            authenticatedItem {
+              ... on User {
+                id
+              }
+            }
+          }
+        `,
+        variables: {},
+      });
+      console.log('User result from GraphQL:', userResult);
+      currentUserId = userResult?.authenticatedItem?.id || null;
+    } catch (error: any) {
+      console.error('Error getting current user via GraphQL:', error);
     }
   }
 

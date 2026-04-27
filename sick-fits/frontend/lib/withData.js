@@ -46,8 +46,9 @@ function createClient({ headers, initialState }) {
       // this uses apollo-link-http under the hood, so all the options here come from that package
       new HttpLink({
         uri: endpoint,
+        credentials: 'include', // Always include credentials for session persistence
         fetchOptions: {
-          credentials: 'include' // Always include credentials for session persistence
+          credentials: 'include' // Ensure credentials are sent with all requests
         },
         // pass the headers along from this request. This enables SSR with logged in state
         headers

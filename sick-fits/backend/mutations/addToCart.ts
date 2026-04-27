@@ -8,9 +8,12 @@ export default async function addToCart(
   context: KeystoneContext,
 ): Promise<any> {
   console.log('Adding to cart!!');
+  console.log('Session data:', context.session);
   // 1   query the current user, see if they are signed in
   const sesh = context.session as Session;
   if (!sesh || !sesh.itemId) {
+    console.error('Session error - sesh:', sesh);
+    console.error('No valid session found. Session:', JSON.stringify(context.session));
     throw new Error('You must be logged in to do this!');
   }
   // 2 query the current user's cart

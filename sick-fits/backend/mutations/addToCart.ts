@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { KeystoneContext } from '@keystone-next/types';
-import { Session } from '../types';
 
 export default async function addToCart(
   root: any,
@@ -8,23 +7,52 @@ export default async function addToCart(
   context: KeystoneContext,
 ): Promise<any> {
   console.log('Adding to cart!!');
-  console.log('Session data:', context.session);
-  // 1   query the current user, see if they are signed in
-  const sesh = context.session as Session;
-  if (!sesh || !sesh.itemId) {
-    console.error('Session error - sesh:', sesh);
-    console.error(
-      'No valid session found. Session:',
-      JSON.stringify(context.session),
-    );
+
+  // 1. Get the current user via GraphQL instead of context.session
+  // This works around a session propagation issue in Keystone custom mutations
+  // where context.session may be null even when the user is authenticated
+  let currentUserId: string | null = null;
+  try {
+    const userResult = await context.graphql.run({
+      query: `
+        query GetCurrentUser {
+          authenticatedItem {
+            ... on User {
+              id
+            }
+          }
+        }
+      `,
+      variables: {},
+    });
+    console.log('User result from GraphQL:', userResult);
+    currentUserId = userResult?.authenticatedItem?.id || null;
+  } catch (error: any) {
+    console.error('Error getting current user via GraphQL:', error);
+  }
+
+  // Fallback to context.session if GraphQL didn't work
+  if (!currentUserId) {
+    const sesh = context.session as any;
+    console.log('Falling back to context.session:', sesh);
+    if (sesh?.itemId) {
+      currentUserId = sesh.itemId;
+    }
+  }
+
+  if (!currentUserId) {
+    console.error('No user found - not authenticated');
     throw new Error('You must be logged in to do this!');
   }
+
+  console.log('Current user ID:', currentUserId);
+
   // 2 query the current user's cart
   // Use context.lists.CartItem.findMany() - the access control (rules.canOrder)
   // automatically filters to only the current user's cart items
   let allCartItems;
   try {
-    console.log('Fetching cart items for user:', sesh.itemId);
+    console.log('Fetching cart items for user:', currentUserId);
     // Get all cart items for the current user (access control handles the user filter)
     allCartItems = await context.lists.CartItem.findMany({});
     console.log('All cart items for user:', allCartItems);
@@ -59,7 +87,7 @@ export default async function addToCart(
     console.log('Filtered cart items for product (JS):', allCartItems);
   } catch (error: any) {
     console.error('Error finding cart items:', error);
-    console.log('Session itemId:', sesh.itemId);
+    console.log('Current user ID:', currentUserId);
     console.log('Product ID:', productId);
     throw new Error('Failed to find cart items. Please try again.');
   }
@@ -127,7 +155,7 @@ export default async function addToCart(
       `,
       variables: {
         productId: productId,
-        userId: sesh.itemId,
+        userId: currentUserId,
       },
     });
     console.log('Create result:', createResult);
@@ -139,7 +167,7 @@ export default async function addToCart(
     return await context.lists.CartItem.createOne({
       data: {
         product: { connect: { id: productId } },
-        user: { connect: { id: sesh.itemId } },
+        user: { connect: { id: currentUserId } },
       },
     });
   }

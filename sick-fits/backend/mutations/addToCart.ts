@@ -13,7 +13,10 @@ export default async function addToCart(
   const sesh = context.session as Session;
   if (!sesh || !sesh.itemId) {
     console.error('Session error - sesh:', sesh);
-    console.error('No valid session found. Session:', JSON.stringify(context.session));
+    console.error(
+      'No valid session found. Session:',
+      JSON.stringify(context.session),
+    );
     throw new Error('You must be logged in to do this!');
   }
   // 2 query the current user's cart

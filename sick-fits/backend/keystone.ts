@@ -26,6 +26,7 @@ const sessionConfig = {
   secret: process.env.COOKIE_SECRET,
   sameSite: 'none', // Required for cross-domain requests (frontend on vercel.app, backend on railway.app)
   secure: true, // Always use secure cookies for Railway (HTTPS)
+  httpOnly: true, // Security: prevent JavaScript access
 };
 
 const { withAuth } = createAuth({

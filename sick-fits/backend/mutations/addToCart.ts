@@ -9,43 +9,11 @@ export default async function addToCart(
   console.log('Adding to cart!!');
 
   // 1. Get the current user ID
-  // Try multiple approaches to get the user session since context.session
-  // may not be available in custom mutations in production
-  let currentUserId: string | null = null;
-
-  // Approach 1: Try context.session (works locally, may not work in production)
   const sesh = context.session as any;
-  if (sesh?.itemId) {
-    console.log('Got user from context.session');
-    currentUserId = sesh.itemId;
-  }
-
-  // Approach 2: Try context.graphql.run() with authenticatedItem
-  if (!currentUserId) {
-    try {
-      const userResult = await context.graphql.run({
-        query: `
-          query GetCurrentUser {
-            authenticatedItem {
-              ... on User {
-                id
-              }
-            }
-          }
-        `,
-        variables: {},
-      });
-      console.log('User result from GraphQL:', userResult);
-      currentUserId = userResult?.authenticatedItem?.id || null;
-    } catch (error: any) {
-      console.error('Error getting current user via GraphQL:', error);
-    }
-  }
-
-  if (!currentUserId) {
-    console.error('No user found - not authenticated');
+  if (!sesh?.itemId) {
     throw new Error('You must be logged in to do this!');
   }
+  const currentUserId = sesh.itemId;
 
   console.log('Current user ID:', currentUserId);
 

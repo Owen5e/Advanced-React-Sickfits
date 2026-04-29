@@ -19,61 +19,45 @@ export default function Home() {
   const { query } = useRouter();
   const page = parseInt(query.page) || 1;
 
-  // Store AI filters
-  const [filters, setFilters] = useState({});
+  // Store AI search results (products array) or use normal pagination
+  const [aiResults, setAiResults] = useState([]);
 
-  // Build where dynamically
-  const where = {};
-  const andConditions = [];
+  // Fetch products using pagination (unless AI search is active)
+  const where = aiResults.length === 0 ? {} : null;
 
-  if (filters.keyword) {
-    andConditions.push({
-      OR: [{ name_contains_i: filters.keyword }, { description_contains_i: filters.keyword }]
-    });
-  }
-
-  if (filters.maxPrice) {
-    andConditions.push({ price_lte: filters.maxPrice * 100 });
-  }
-
-  if (filters.minPrice) {
-    andConditions.push({ price_gte: filters.minPrice * 100 });
-  }
-
-  if (andConditions.length > 0) {
-    where.AND = andConditions;
-  }
-
-  // Fetch products using filters
   const { data, loading, error } = useQuery(ALL_PRODUCTS_QUERY, {
+    skip: aiResults.length > 0, // Skip query if AI search is active
     variables: {
-      where,
+      where: where || {},
       skip: page * perPage - perPage,
       first: perPage
     }
   });
 
+  // Use AI results if available, otherwise use paginated results
+  const products = aiResults.length > 0 ? aiResults : data?.allProducts || [];
+
   return (
     <div>
       {/* AI Search Component */}
-      <AISearch onResults={setFilters} />
+      <AISearch onResults={setAiResults} />
 
       {/* Debug (optional) */}
-      {/* <pre>{JSON.stringify(filters, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(aiResults, null, 2)}</pre> */}
 
       {/* Products */}
       {loading && <p>Loading...</p>}
       {error && <p>Error loading products</p>}
 
-      <Pagination page={page} />
+      {aiResults.length === 0 && <Pagination page={page} />}
 
       <ProductListStyles>
-        {data?.allProducts?.map(product => (
+        {products.map(product => (
           <Product key={product.id} product={product} />
         ))}
       </ProductListStyles>
 
-      <Pagination page={page} />
+      {aiResults.length === 0 && <Pagination page={page} />}
     </div>
   );
 }

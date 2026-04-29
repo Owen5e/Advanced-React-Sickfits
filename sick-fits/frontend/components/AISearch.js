@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useCart } from '../lib/cartState';
@@ -8,6 +9,7 @@ export default function AISearch({ onResults }) {
   const [messages, setMessages] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const { cartOpen } = useCart();
+  const router = useRouter();
 
   async function handleSearch() {
     if (!query.trim()) return;
@@ -180,7 +182,8 @@ export default function AISearch({ onResults }) {
                         {msg.products.slice(0, 3).map(product => (
                           <div
                             key={product.id}
-                            className="bg-neutral-50 p-2 rounded border border-neutral-200 text-xs"
+                            onClick={() => router.push(`/product/${product.id}`)}
+                            className="bg-neutral-50 p-2 rounded border border-neutral-200 text-xs cursor-pointer hover:bg-neutral-100 hover:border-primary hover:shadow-md transition-all"
                           >
                             <p className="font-medium text-neutral-800">{product.name}</p>
                             <p className="text-neutral-600 line-clamp-2">{product.description}</p>

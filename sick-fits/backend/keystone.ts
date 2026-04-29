@@ -24,10 +24,11 @@ const databaseURL =
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // how long they stay signed in?
   secret: process.env.COOKIE_SECRET,
-  sameSite: 'none', // Must be 'none' for cross-domain
-  secure: true, // HTTPS only
-  httpOnly: true,
-  signed: true,
+  cookie: {
+    sameSite: 'none', // Must be 'none' for cross-domain
+    secure: true, // HTTPS only
+    httpOnly: true,
+  },
 };
 
 const { withAuth } = createAuth({

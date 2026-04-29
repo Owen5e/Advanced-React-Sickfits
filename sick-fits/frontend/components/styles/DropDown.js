@@ -8,7 +8,7 @@ const DropDown = styled.div`
 `;
 
 const DropDownItem = styled.div`
-  border-bottom: 1px solid var(--lightGray);
+  border-bottom: 1px solid black;
   background: ${props => (props.highlighted ? '#f7f7f7' : 'white')};
   padding: 1rem;
   transition: all 0.2s;
@@ -17,6 +17,7 @@ const DropDownItem = styled.div`
   align-items: center;
   border-left: 10px solid ${props => (props.highlighted ? props.theme.lightgrey : 'white')};
   cursor: pointer;
+  color: black;
   img {
     margin-right: 10px;
   }
@@ -39,6 +40,7 @@ const SearchStyles = styled.div`
     padding: 10px;
     border: 0;
     font-size: 2rem;
+    color: black;
     &.loading {
       animation: ${glow} 0.5s ease-in-out infinite alternate;
     }

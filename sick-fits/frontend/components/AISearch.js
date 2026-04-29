@@ -24,15 +24,23 @@ export default function AISearch({ onResults }) {
         body: JSON.stringify({ query })
       });
 
-      const filters = await res.json();
+      const products = await res.json();
 
-      console.log('AI Filters:', filters);
+      console.log('Search results:', products);
 
-      // Pass filters to parent
-      onResults(filters);
+      // Pass products to parent
+      onResults(products);
 
       // Add AI response message
-      setMessages(prev => [...prev, { text: `Applied filters for "${query}"`, type: 'ai' }]);
+      const count = products.length;
+      setMessages(prev => [
+        ...prev,
+        {
+          text: `Found ${count} product${count !== 1 ? 's' : ''} matching "${query}"`,
+          type: 'ai',
+          products
+        }
+      ]);
     } catch (err) {
       console.error('Search failed', err);
       setMessages(prev => [...prev, { text: 'Search failed. Try again.', type: 'ai' }]);
@@ -157,15 +165,37 @@ export default function AISearch({ onResults }) {
             ) : (
               <div className="space-y-3">
                 {messages.map((msg, idx) => (
-                  <div
-                    key={idx}
-                    className={`max-w-[80%] p-3 rounded-lg break-words whitespace-normal ${
-                      msg.type === 'user'
-                        ? 'ml-auto bg-primary text-white rounded-br-none'
-                        : 'bg-neutral-100 text-neutral-800 rounded-bl-none'
-                    }`}
-                  >
-                    {msg.text}
+                  <div key={idx}>
+                    <div
+                      className={`max-w-[80%] p-3 rounded-lg break-words whitespace-normal ${
+                        msg.type === 'user'
+                          ? 'ml-auto bg-primary text-white rounded-br-none'
+                          : 'bg-neutral-100 text-neutral-800 rounded-bl-none'
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
+                    {msg.products && msg.products.length > 0 && (
+                      <div className="mt-2 max-w-[90%] space-y-2">
+                        {msg.products.slice(0, 3).map(product => (
+                          <div
+                            key={product.id}
+                            className="bg-neutral-50 p-2 rounded border border-neutral-200 text-xs"
+                          >
+                            <p className="font-medium text-neutral-800">{product.name}</p>
+                            <p className="text-neutral-600 line-clamp-2">{product.description}</p>
+                            <p className="text-primary font-semibold mt-1">
+                              ${(product.price / 100).toFixed(2)}
+                            </p>
+                          </div>
+                        ))}
+                        {msg.products.length > 3 && (
+                          <p className="text-xs text-neutral-500 italic">
+                            +{msg.products.length - 3} more products
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
                 {loading && (

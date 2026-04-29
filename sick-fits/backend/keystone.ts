@@ -24,9 +24,10 @@ const databaseURL =
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // how long they stay signed in?
   secret: process.env.COOKIE_SECRET,
-  sameSite: 'none', // Required for cross-domain requests (frontend on vercel.app, backend on railway.app)
-  secure: true, // Always use secure cookies for Railway (HTTPS)
-  httpOnly: true, // Security: prevent JavaScript access
+  sameSite: 'none', // Must be 'none' for cross-domain
+  secure: true, // HTTPS only
+  httpOnly: true,
+  signed: true,
 };
 
 const { withAuth } = createAuth({

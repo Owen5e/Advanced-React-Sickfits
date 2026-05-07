@@ -21,14 +21,16 @@ import { insertSeedData } from './seed-data';
 const databaseURL =
   process.env.DATABASE_URL || 'mongodb://localhost/keystone-sick-fits-tutorial';
 
+// The patched statelessSessions (see patches/@keystone-next+keystone+9.3.1.patch)
+// destructures sameSite and secure as TOP-LEVEL properties, not from a nested
+// cookie object. Nesting them under `cookie: {}` meant they were never read,
+// so sameSite silently defaulted to 'lax' — which blocks cross-origin cookies
+// when the frontend (Vercel) and backend (Railway) are on different domains.
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // how long they stay signed in?
   secret: process.env.COOKIE_SECRET,
-  cookie: {
-    sameSite: 'none', // Must be 'none' for cross-domain
-    secure: true, // HTTPS only
-    httpOnly: true,
-  },
+  sameSite: 'none', // must be 'none' for cross-domain cookie delivery
+  secure: true, // required when sameSite is 'none'
 };
 
 const { withAuth } = createAuth({

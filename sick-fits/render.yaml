@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: sick-fits-backend
+    runtime: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
+    envVars:
+      - key: DATABASE_URL
+        scope: project
+      - key: COOKIE_SECRET
+        scope: project
+      - key: FRONTEND_URL
+        scope: project
+      - key: CLOUDINARY_CLOUD_NAME
+        scope: project
+      - key: CLOUDINARY_KEY
+        scope: project
+      - key: CLOUDINARY_SECRET
+        scope: project
+      - key: STRIPE_SECRET
+        scope: project
+      - key: MAIL_HOST
+        scope: project
+      - key: MAIL_PORT
+        scope: project
+      - key: MAIL_USER
+        scope: project
+      - key: MAIL_PASS
+        scope: project

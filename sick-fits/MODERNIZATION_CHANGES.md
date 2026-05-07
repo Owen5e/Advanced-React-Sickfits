@@ -366,7 +366,7 @@ NEXT_PUBLIC_BACKEND_URL=...
 
 ---
 
-## 15. **Category System** ⭐ NEW FEATURE
+## 15. **Category System** (NEW FEATURE)
 
 ### Original Sick Fits
 

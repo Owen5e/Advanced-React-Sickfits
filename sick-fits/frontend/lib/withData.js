@@ -6,7 +6,7 @@ import withApollo from 'next-with-apollo';
 import paginationField from './paginationField';
 
 const localEndpoint = 'http://localhost:3000/api/graphql';
-const prodEndpoint = 'https://advanced-react-sickfits-production.up.railway.app/api/graphql';
+const prodEndpoint = 'https://api.owenstack.com/api/graphql';
 
 function getEndpoint() {
   // Check environment variable first

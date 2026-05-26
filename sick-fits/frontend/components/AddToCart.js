@@ -26,15 +26,16 @@ const ADD_TO_CART_MUTATION = gql`
 export default function AddToCart({ id }) {
   const router = useRouter();
   const user = useUser();
+
   const [addToCart, { loading, error, data }] = useMutation(ADD_TO_CART_MUTATION, {
     variables: { id },
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-    onCompleted: data => {
-      console.log('Add to cart completed:', data);
-    },
-    onError: error => {
-      console.error('Add to cart error:', error);
-    }
+    refetchQueries: [
+      {
+        query: CURRENT_USER_QUERY,
+        fetchPolicy: 'network-only'
+      }
+    ],
+    awaitRefetchQueries: true
   });
 
   if (error) {
@@ -66,7 +67,11 @@ export default function AddToCart({ id }) {
     } catch (err) {
       console.error('Failed to add to cart:', err);
       // Check if error is about authentication
-      if (err.message.includes('not authenticated') || err.message.includes('not logged in') || err.message.includes('You must be logged in')) {
+      if (
+        err.message.includes('not authenticated') ||
+        err.message.includes('not logged in') ||
+        err.message.includes('You must be logged in')
+      ) {
         console.log('Authentication error detected, redirecting to signin');
         router.push({
           pathname: '/signin',

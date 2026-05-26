@@ -30,7 +30,10 @@ export const CURRENT_USER_QUERY = gql`
 `;
 
 export function useUser() {
-  const { data, error, loading } = useQuery(CURRENT_USER_QUERY);
+  const { data, error, loading, refetch } = useQuery(CURRENT_USER_QUERY, {
+    fetchPolicy: 'network-only',
+    pollInterval: 5000
+  });
 
   if (error) {
     console.error('Error fetching user:', error);

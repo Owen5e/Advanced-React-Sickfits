@@ -30,20 +30,23 @@ export default function Pagination({ page }) {
           Trendy fits - page {page} of {pageCount}
         </title>
       </Head>
-      <Link href={`/products/${page - 1}`}>
-        <a aria-disabled={page <= 1} className="flex items-center gap-1">
-          {' '}
-          <FaArrowLeftLong /> Prev
-        </a>
+      <Link
+        href={`/products/${page - 1}`}
+        className="flex items-center gap-1"
+        aria-disabled={page <= 1}
+      >
+        <FaArrowLeftLong /> Prev
       </Link>
       <p>
         page {page} of <span data-testid="pageCount">{pageCount}</span>
       </p>
       <p className="hidden md:block"> {count} Items Total</p>
-      <Link href={`/products/${page + 1}`}>
-        <a aria-disabled={page >= pageCount} className="flex items-center gap-1">
-          Next <FaArrowRightLong />{' '}
-        </a>
+      <Link
+        href={`/products/${page + 1}`}
+        className="flex items-center gap-1"
+        aria-disabled={page >= pageCount}
+      >
+        Next <FaArrowRightLong />
       </Link>
     </PaginationStyles>
   );

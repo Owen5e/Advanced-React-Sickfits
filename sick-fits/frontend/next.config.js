@@ -2,6 +2,9 @@ module.exports = {
   reactStrictMode: false,
   images: {
     domains: ['advanced-react-sickfits-production.up.railway.app']
+  },
+  compiler: {
+    styledComponents: true
   }
   // async rewrites() {
   //   return [

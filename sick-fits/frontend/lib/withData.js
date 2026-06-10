@@ -9,22 +9,9 @@ const localEndpoint = 'http://localhost:3000/api/graphql';
 const prodEndpoint = 'https://api.owenstack.com/api/graphql';
 
 function getEndpoint() {
-  // Check environment variable first
-  if (process.env.NEXT_PUBLIC_BACKEND_URL) {
-    // If the env var already includes the full path, use it as-is
-    if (process.env.NEXT_PUBLIC_BACKEND_URL.includes('/api/graphql')) {
-      return process.env.NEXT_PUBLIC_BACKEND_URL;
-    }
-    // Otherwise append the GraphQL path
-    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/graphql`;
-  }
-
-  // On client-side, check for query parameter
   if (typeof window !== 'undefined' && window.location.search.includes('useLocal=true')) {
     return localEndpoint;
   }
-
-  // Default to production
   return prodEndpoint;
 }
 

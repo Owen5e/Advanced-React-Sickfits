@@ -1,11 +1,18 @@
 import Link from 'next/link';
+import { Space_Mono } from 'next/font/google';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../lib/cartState';
 import CartCount from './CartCount';
 import SignOut from './SignOut';
 import { useUser } from './User';
 
-export default function Nav() {
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap'
+});
+
+export default function Nav({ onToggleSearch, isSearchOpen = false }) {
   const user = useUser();
   console.log('Nav - Current user:', user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,64 +40,126 @@ export default function Nav() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const NavLinks = () => (
-    <>
+  const linkClass =
+    'text-[#4a463c] hover:text-black transition-colors font-medium block py-2 px-4 md:py-0 md:px-0';
+
+  const bagCount =
+    user?.cart?.reduce(
+      (tally, cartItem) => tally + (cartItem?.product ? cartItem.quantity : 0),
+      0
+    ) || 0;
+
+  const SearchIcon = () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+      <path d="M20 20L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+
+  const PrimaryLinks = () => (
+    <div className="flex items-center gap-6">
       <Link
         href="/products"
-        className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
+        className="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0"
       >
-        Products
+        SHOP ALL
       </Link>
       {user && (
-        <>
-          <Link
-            href="/order"
-            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
-          >
-            Orders
+        <Link href="/order" className={linkClass}>
+          Orders
+        </Link>
+      )}
+      {user && (
+        <Link href="/sell" className={linkClass}>
+          Sell
+        </Link>
+      )}
+      {user && (
+        <div className="block md:py-0 md:px-0">
+          <SignOut />
+        </div>
+      )}
+    </div>
+  );
+
+  const DesktopNavLinks = () => (
+    <div className={`${spaceMono.className} hidden md:grid w-full grid-cols-2 items-center`}>
+      <div className="flex items-center gap-6 justify-self-center">
+        <PrimaryLinks />
+      </div>
+
+      <div className="flex items-center gap-6 justify-self-end">
+        <button
+          type="button"
+          onClick={onToggleSearch}
+          className="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center"
+          aria-label="Toggle search"
+          aria-expanded={isSearchOpen}
+          aria-controls="header-search"
+        >
+          <SearchIcon />
+        </button>
+        {!user && (
+          <Link href="/signin" className={linkClass}>
+            Sign In
           </Link>
-          <Link
-            href="/sell"
-            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
-          >
-            Sell
-          </Link>
-          <Link
-            href="/account"
-            className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
-          >
+        )}
+        {user && (
+          <Link href="/account" className={linkClass}>
             Account
           </Link>
-          <div className="block md:py-0 md:px-0">
-            <SignOut />
-          </div>
+        )}
+
+        {user && (
           <button
             type="button"
             onClick={openCart}
-            className="text-white hover:text-primary-light transition-colors font-medium flex items-center md:py-0 md:px-0"
+            className="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center md:py-0 md:px-0"
           >
-            <span>My Cart </span>
             <span className="ml-1 pb-0.5">🛒 </span>
-            <CartCount
-              count={
-                user.cart?.reduce(
-                  (tally, cartItem) => tally + (cartItem?.product ? cartItem.quantity : 0),
-                  0
-                ) || 0
-              }
-            />
+            <span>Bag </span>
+            <CartCount count={bagCount} />
           </button>
-        </>
-      )}
+        )}
+      </div>
+    </div>
+  );
+
+  const MobileNavLinks = () => (
+    <div className={`${spaceMono.className} flex flex-col gap-2`}>
+      <button type="button" onClick={onToggleSearch} className={`${linkClass} text-left`}>
+        Search
+      </button>
       {!user && (
-        <Link
-          href="/signin"
-          className="text-white hover:text-primary-light transition-colors font-medium block py-2 px-4 md:py-0 md:px-0"
-        >
+        <Link href="/signin" className={linkClass}>
           Sign In
         </Link>
       )}
-    </>
+      <PrimaryLinks />
+      {user && (
+        <Link href="/account" className={linkClass}>
+          Account
+        </Link>
+      )}
+      {user && (
+        <button
+          type="button"
+          onClick={openCart}
+          className="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center py-2 px-4"
+        >
+          <span className="ml-1 pb-0.5">🛒 </span>
+          <span>Bag </span>
+          <CartCount count={bagCount} />
+        </button>
+      )}
+    </div>
   );
 
   return (
@@ -122,8 +191,8 @@ export default function Nav() {
       </button>
 
       {/* Desktop navigation */}
-      <nav className="hidden md:flex items-center space-x-6">
-        <NavLinks />
+      <nav className="w-full">
+        <DesktopNavLinks />
       </nav>
 
       {/* Mobile navigation menu */}
@@ -135,7 +204,7 @@ export default function Nav() {
         }`}
       >
         <div className="flex flex-col py-4 px-4">
-          <NavLinks />
+          <MobileNavLinks />
         </div>
       </div>
     </div>

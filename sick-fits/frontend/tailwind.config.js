@@ -52,7 +52,7 @@ module.exports = {
       fontFamily: {
         // Adding custom font
         radnika: [
-          'radnika_next',
+          'var(--font-radnika)',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',

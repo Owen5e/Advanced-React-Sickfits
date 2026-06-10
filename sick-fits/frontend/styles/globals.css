@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'radnika_next';
-  src: url('/static/radnikanext-medium-webfont.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
 /* Custom base styles with unified color palette */
 @layer base {
   html {
@@ -23,14 +16,14 @@
   }
 
   body {
-    font-family: 'radnika_next', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+      Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     padding: 0;
     margin: 0;
     font-size: 1.5rem;
     line-height: 1.6;
-    color: #1f2937;
-    background-color: #f9fafb;
+    color: #16140f;
+    background-color: #f5f1ea;
   }
 
   /* a {
@@ -43,8 +36,7 @@
   }
 
   button {
-    font-family: 'radnika_next', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-      Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: inherit;
     cursor: pointer;
     border: none;
     outline: none;

@@ -24,7 +24,7 @@
     "graphql-tag": "^2.11.0",
     "graphql-upload": "^11.0.0",
     "lodash.debounce": "^4.0.8",
-    "next": "^12.3.7",
+    "next": "^13.4.19",
     "next-with-apollo": "^5.3.0",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
@@ -48,7 +48,7 @@
     "casual": "^1.6.2",
     "eslint": "^7.14.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-next": "^12.3.0",
+    "eslint-config-next": "^13.4.19",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-wesbos": "^1.0.1",
     "eslint-plugin-html": "^6.1.1",
@@ -62,56 +62,5 @@
     "prettier": "^2.2.1",
     "react-test-renderer": "^17.0.1",
     "tailwindcss": "^3.3.0"
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ],
-    "testEnvironment": "jsdom",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/$1"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "ts",
-      "tsx"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!(next)/)"
-    ]
-  },
-  "//": "This is our babel config, I prefer this over a .babelrc file",
-  "babel": {
-    "env": {
-      "development": {
-        "presets": [
-          "next/babel"
-        ],
-        "plugins": []
-      },
-      "production": {
-        "presets": [
-          "next/babel"
-        ],
-        "plugins": []
-      },
-      "test": {
-        "presets": [
-          [
-            "next/babel",
-            {
-              "preset-env": {
-                "modules": "commonjs"
-              }
-            }
-          ]
-        ],
-        "plugins": []
-      }
-    }
   }
 }

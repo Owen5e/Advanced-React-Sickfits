@@ -62,7 +62,7 @@ export default function OrdersPage() {
         {orders.map(order => (
           <OrderItemStyles key={order.id}>
             <Link href={`/order/${order.id}`}>
-              <a>
+              <div>
                 <div className="order-meta">
                   <p>{countItemsInOrder(order)} Items</p>
                   <p>
@@ -80,7 +80,7 @@ export default function OrdersPage() {
                     />
                   ))}
                 </div>
-              </a>
+              </div>
             </Link>
           </OrderItemStyles>
         ))}

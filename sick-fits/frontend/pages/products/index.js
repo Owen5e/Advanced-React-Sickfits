@@ -10,7 +10,6 @@ export default function ProductsPage() {
   return (
     <div>
       <Categories />
-      <Pagination page={page || 1} />
       <Products page={page || 1} />
       <Pagination page={page || 1} />
     </div>

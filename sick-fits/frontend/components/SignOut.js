@@ -14,8 +14,23 @@ export default function SignOut() {
     refetchQueries: [{ query: CURRENT_USER_QUERY }]
   });
   return (
-    <button type="button" onClick={signout}>
-      SignOut
+    <button
+      type="button"
+      onClick={signout}
+      style={{
+        background: '#dc2626',
+        color: 'white',
+        border: 'none',
+        padding: '0.75rem 1.5rem',
+        borderRadius: '4px',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        transition: 'background 0.2s'
+      }}
+      onMouseOver={e => (e.currentTarget.style.background = '#b91c1c')}
+      onMouseOut={e => (e.currentTarget.style.background = '#dc2626')}
+    >
+      Sign Out
     </button>
   );
 }

@@ -1,5 +1,4 @@
 import { gql, useQuery } from '@apollo/client';
-import styled from 'styled-components';
 import Category from './Category';
 
 export const ALL_CATEGORIES_QUERY = gql`
@@ -23,31 +22,17 @@ export const ALL_CATEGORIES_QUERY = gql`
   }
 `;
 
-const CategoryListStyles = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-gap: 20px;
-  margin: 2rem 0;
-`;
-
 export default function Categories() {
   const { data, error, loading } = useQuery(ALL_CATEGORIES_QUERY);
 
-  if (loading) return <p>Loading categories...</p>;
+  if (loading) return null;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div>
-      <h2>Product Categories</h2>
-      <CategoryListStyles>
-        {data.allCategories.map(category => (
-          <Category key={category.id} category={category} />
-        ))}
-      </CategoryListStyles>
+    <div className=" max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-0 py-4 flex flex-wrap gap-3">
+      {data.allCategories.map(category => (
+        <Category key={category.id} category={category} />
+      ))}
     </div>
   );
 }
-
-Categories.propTypes = {
-  // Add any prop types if needed
-};

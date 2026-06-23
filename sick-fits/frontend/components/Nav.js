@@ -1,9 +1,9 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Space_Mono } from 'next/font/google';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../lib/cartState';
 import CartCount from './CartCount';
-import SignOut from './SignOut';
 import { useUser } from './User';
 
 const spaceMono = Space_Mono({
@@ -13,6 +13,7 @@ const spaceMono = Space_Mono({
 });
 
 export default function Nav({ onToggleSearch, isSearchOpen = false }) {
+  const { pathname } = useRouter();
   const user = useUser();
   console.log('Nav - Current user:', user);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,8 +41,12 @@ export default function Nav({ onToggleSearch, isSearchOpen = false }) {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const linkClass =
-    'text-[#4a463c] hover:text-black transition-colors font-medium block py-2 px-4 md:py-0 md:px-0';
+  const isActive = path => pathname.startsWith(path);
+
+  const linkClass = path =>
+    `text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 ${
+      isActive(path) ? 'border-[#ff4a17] text-black' : 'border-transparent'
+    }`;
 
   const bagCount =
     user?.cart?.reduce(
@@ -63,28 +68,39 @@ export default function Nav({ onToggleSearch, isSearchOpen = false }) {
     </svg>
   );
 
+  const AccountIcon = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+      <path d="M4 20c0-4 3.6-8 8-8s8 4 8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+
   const PrimaryLinks = () => (
     <div className="flex items-center gap-6">
       <Link
         href="/products"
-        className="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0"
+        className={`text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 ${
+          isActive('/products') ? 'border-[#ff4a17] text-black' : 'border-transparent'
+        }`}
       >
         SHOP ALL
       </Link>
       {user && (
-        <Link href="/order" className={linkClass}>
+        <Link href="/order" className={linkClass('/order')}>
           Orders
         </Link>
       )}
       {user && (
-        <Link href="/sell" className={linkClass}>
+        <Link href="/sell" className={linkClass('/sell')}>
           Sell
         </Link>
-      )}
-      {user && (
-        <div className="block md:py-0 md:px-0">
-          <SignOut />
-        </div>
       )}
     </div>
   );
@@ -106,16 +122,15 @@ export default function Nav({ onToggleSearch, isSearchOpen = false }) {
         >
           <SearchIcon />
         </button>
-        {!user && (
-          <Link href="/signin" className={linkClass}>
-            Sign In
-          </Link>
-        )}
-        {user && (
-          <Link href="/account" className={linkClass}>
-            Account
-          </Link>
-        )}
+        <Link
+          href={user ? '/account' : '/signin'}
+          className={`text-[#4a463c] hover:text-black transition-colors font-medium flex items-center border-b-2 ${
+            isActive('/account') || isActive('/signin') ? 'border-[#ff4a17] text-black' : 'border-transparent'
+          }`}
+          aria-label={user ? 'Account' : 'Sign In'}
+        >
+          <AccountIcon />
+        </Link>
 
         {user && (
           <button
@@ -134,17 +149,12 @@ export default function Nav({ onToggleSearch, isSearchOpen = false }) {
 
   const MobileNavLinks = () => (
     <div className={`${spaceMono.className} flex flex-col gap-2`}>
-      <button type="button" onClick={onToggleSearch} className={`${linkClass} text-left`}>
+      <button type="button" onClick={onToggleSearch} className={`${linkClass('/')} text-left`}>
         Search
       </button>
-      {!user && (
-        <Link href="/signin" className={linkClass}>
-          Sign In
-        </Link>
-      )}
       <PrimaryLinks />
       {user && (
-        <Link href="/account" className={linkClass}>
+        <Link href="/account" className={linkClass('/account')}>
           Account
         </Link>
       )}

@@ -132,10 +132,10 @@ export default function CategoryPage() {
           <img
             src={category.image.image.publicUrlTransformed}
             alt={category.image.altText || category.name}
-            className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
+            className="w-32 h-32 object-cover rounded-full mx-auto mb-4 "
           />
         )}
-        <h1 className="text-4xl font-bold ">{category.name}</h1>
+        <h1 className="text-4xl font-bold uppercase ">{category.name}</h1>
       </CategoryHeader>
 
       <div className="text-center mb-8 px-4">

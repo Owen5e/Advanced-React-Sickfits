@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import ErrorMessage from '../components/ErrorMessage';
 import Form from '../components/styles/Form';
+import SignOut from '../components/SignOut';
 import { CURRENT_USER_QUERY } from '../components/User';
 import useForm from '../lib/useForm';
 
@@ -329,7 +330,7 @@ export default function AccountPage() {
 
       <AccountSection>
         <SectionTitle>Account Actions</SectionTitle>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <Link href="/order">
             <ActionButton>View All Orders</ActionButton>
           </Link>
@@ -339,6 +340,7 @@ export default function AccountPage() {
           <Link href="/reset">
             <ActionButton>Reset Password</ActionButton>
           </Link>
+          <SignOut />
         </div>
       </AccountSection>
     </AccountContainer>

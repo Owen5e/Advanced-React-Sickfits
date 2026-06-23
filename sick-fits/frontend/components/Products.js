@@ -26,9 +26,47 @@ export const ALL_PRODUCTS_QUERY = gql`
 
 const ProductListStyles = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
   margin: 1.5rem 0;
+  border-radius: 0px;
+
+  & > * {
+    height: 350px;
+    overflow: hidden;
+  }
+
+  & > * img {
+    width: 100%;
+    padding: 0;
+    object-fit: fill;
+    height: 250px;
+  }
+
+  @media (min-width: 641px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-gap: 0rem;
+
+    & > * {
+      height: 500px;
+      overflow: hidden;
+    }
+
+    & > *:nth-child(4n + 1) img {
+      height: 250px;
+    }
+
+    & > *:nth-child(4n + 2) img {
+      height: 300px;
+    }
+
+    & > *:nth-child(4n + 3) img {
+      height: 350px;
+    }
+
+    & > *:nth-child(4n + 4) img {
+      height: 350px;
+    }
+  }
 `;
 
 export default function Products({ page, where = {} }) {

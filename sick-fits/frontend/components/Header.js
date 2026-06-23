@@ -38,6 +38,7 @@ const HeaderStyles = styled.header`
   color: #16140f;
   width: 100%;
   position: relative;
+  border-bottom: 1px solid #dad4c6;
 
   .marquee {
     overflow: hidden;
@@ -88,8 +89,8 @@ const HeaderStyles = styled.header`
     max-width: 1400px;
     overflow: hidden;
     align-items: center;
-    padding: 0.5rem 2rem;
-    border-bottom: 1px solid #374151;
+    padding-inline: 0.5rem;
+    border-top: 1px solid #dad4c6;
     max-height: 0;
     opacity: 0;
     transform: translateY(-6px);

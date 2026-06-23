@@ -50,9 +50,9 @@ module.exports = {
         elevated: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
       },
       fontFamily: {
-        // Adding custom font
-        radnika: [
-          'var(--font-radnika)',
+        // Main font: Archivo
+        sans: [
+          'Archivo',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -64,7 +64,9 @@ module.exports = {
           'Open Sans',
           'Helvetica Neue',
           'sans-serif'
-        ]
+        ],
+        // Monospace accent font: Space Mono
+        mono: ['Space_Mono', 'monospace']
       },
       fontSize: {
         // Base font size is 10px in styled-components (1rem = 10px)

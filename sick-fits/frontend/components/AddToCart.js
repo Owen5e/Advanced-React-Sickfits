@@ -86,9 +86,9 @@ export default function AddToCart({ id }) {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="flex w-full justify-center items-center bg-accent-dark disabled:bg-neutral-400 text-white px-4 py-1 rounded-md text-center text-[12px] font-lg transition-colors disabled:cursor-not-allowed"
+      className="flex w-full justify-center items-center bg-[#16140f] hover:bg-[#ff4a17] disabled:bg-neutral-400 text-white px-4 py-2 rounded-md text-center text-[12px] font-mono font-lg transition-colors disabled:cursor-not-allowed"
     >
-      Add{loading && 'ing'} to Cart 🛒
+      + ADD{loading && 'ING'} TO BAG
     </button>
   );
 }

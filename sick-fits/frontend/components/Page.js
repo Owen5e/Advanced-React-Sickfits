@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import { Space_Mono } from 'next/font/google';
 import Header from './Header';
+import Categories from './Categories';
+import Footer from './Footer';
+import AISearch from './AISearch';
 
 const spaceMono = Space_Mono({
   subsets: ['latin'],
@@ -17,12 +20,12 @@ export default function Page({ children }) {
           <span className={`${spaceMono.className} pr-2`}>SS26</span>
           <span className={`${spaceMono.className} pr-2 text-[#ff4a17]`}>/</span>
           <span className={`${spaceMono.className}`}>THE TRENDY VIBE</span>
-          <p className="text-7xl w-[300px] md:text-9xl md:w-[600px] font-bold  ">
+          <p className="text-7xl w-[300px] md:text-9xl md:w-[600px] font-black ">
             WEAR THE <span className="text-[#ff4a17] italic ">BUILD</span>.
           </p>
         </div>
-        <div className="text-[#999387]  flex flex-col h-full justify-end">
-          <div>
+        <div className="text-[#999387]  flex flex-col h-full justify-end ">
+          <div className=" md:flex md:flex-col md:items-end ">
             <p className={`${spaceMono.className}`}>
               <span className="text-[#272520] font-bold ">16</span> styles in rotation
             </p>
@@ -35,7 +38,10 @@ export default function Page({ children }) {
           </div>
         </div>
       </div>
+
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</div>
+      <Footer />
+      <AISearch onResults={() => {}} />
     </div>
   );
 }

@@ -39,7 +39,7 @@ const USER_ORDERS_QUERY = gql`
 const OrderUl = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  grid-gap: 4rem;
+  grid-gap: 5rem;
 `;
 
 function countItemsInOrder(order) {

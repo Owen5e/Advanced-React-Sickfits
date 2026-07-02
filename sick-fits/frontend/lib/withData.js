@@ -9,14 +9,33 @@ const localEndpoint = 'http://localhost:3000/api/graphql';
 const prodEndpoint = 'https://api.owenstack.com/api/graphql';
 
 function getEndpoint() {
+  // 1. First check for explicit URL override via env variable
+  if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    return backendUrl.includes('/api/graphql') ? backendUrl : `${backendUrl}/api/graphql`;
+  }
+
+  // 2. Allow explicit override via query parameter (useful for testing)
   if (typeof window !== 'undefined' && window.location.search.includes('useLocal=true')) {
     return localEndpoint;
   }
+
+  // 3. In development mode (localhost), default to local
+  if (
+    typeof window === 'undefined' ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  ) {
+    return localEndpoint;
+  }
+
+  // 4. Fallback to production endpoint
   return prodEndpoint;
 }
 
 function createClient({ headers, initialState }) {
   const endpoint = getEndpoint();
+  console.log(`[Apollo Client] Connecting to: ${endpoint}`);
 
   return new ApolloClient({
     link: ApolloLink.from([

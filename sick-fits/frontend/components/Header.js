@@ -100,6 +100,8 @@ const HeaderStyles = styled.header`
   .sub-bar.open {
     max-height: 150px;
     opacity: 1;
+    overflow: visible;
+
     transform: translateY(0);
   }
 
@@ -143,7 +145,7 @@ export default function Header() {
       <div className="bar">
         <Logo>
           <span className="logo-ball"></span>
-          <Link href="/">TrendyFits</Link>
+          <Link href="/products">TrendyFits</Link>
         </Logo>
         <div className="nav-wrap">
           <Nav onToggleSearch={() => setIsSearchOpen(prev => !prev)} isSearchOpen={isSearchOpen} />

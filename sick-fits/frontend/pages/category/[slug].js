@@ -80,29 +80,48 @@ const CategoryHeader = styled.div`
 
 const ProductListStyles = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 60px;
-  max-width: var(--maxWidth);
-  margin: 0 auto;
-  padding: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 1.5rem 0;
+  border-radius: 0px;
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+  & > * {
+    height: 350px;
+    overflow: hidden;
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    grid-gap: 30px;
-    padding: 1rem 0.5rem;
+  & > * img {
+    width: 100%;
+    padding: 0;
+    object-fit: fill;
+    height: 250px;
   }
 
-  @media (max-width: 480px) {
-    grid-gap: 20px;
-    padding: 0.5rem 0.25rem;
+  @media (min-width: 641px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-gap: 0rem;
+
+    & > * {
+      height: 500px;
+      overflow: hidden;
+    }
+
+    & > *:nth-child(4n + 1) img {
+      height: 250px;
+    }
+
+    & > *:nth-child(4n + 2) img {
+      height: 300px;
+    }
+
+    & > *:nth-child(4n + 3) img {
+      height: 350px;
+    }
+
+    & > *:nth-child(4n + 4) img {
+      height: 350px;
+    }
   }
 `;
-
 export default function CategoryPage() {
   const router = useRouter();
   const { slug } = router.query;
@@ -126,6 +145,7 @@ export default function CategoryPage() {
   }
 
   return (
+
     <div>
       <CategoryHeader>
         {category.image?.image?.publicUrlTransformed && (

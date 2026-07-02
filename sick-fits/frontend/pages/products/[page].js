@@ -9,7 +9,6 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <Categories />
       <Products page={pageNumber} />
       <Pagination page={pageNumber} />
     </div>

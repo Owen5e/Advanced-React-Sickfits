@@ -62,7 +62,7 @@ export default function AISearch({ onResults }) {
       {/* Floating toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 px-2 h-14 bg-[#16140f] text-white rounded-xl shadow-lg flex items-center justify-center z-40 hover:bg-primary-dark transition-colors"
+        className="fixed bottom-6 right-6 px-2 h-14 bg-[#16140f] text-white rounded-3xl shadow-lg flex items-center justify-center z-40 hover:bg-primary-dark transition-colors"
         aria-label={isOpen ? 'Close AI search' : 'Open AI search'}
       >
         {isOpen ? (
@@ -90,7 +90,7 @@ export default function AISearch({ onResults }) {
             >
               <path d="M12.983 21.186a1 1 0 0 1-1.966 0 10 10 0 0 0-8.203-8.203 1 1 0 0 1 0-1.966 10 10 0 0 0 8.203-8.203 1 1 0 0 1 1.966 0 10 10 0 0 0 8.203 8.203 1 1 0 0 1 0 1.966 10 10 0 0 0-8.203 8.203" />
             </svg>
-            <text className=" text-[12px]">ASK STYLIST</text>
+            <text className=" text-[12px]  ">ASK STYLIST</text>
           </div>
         )}
       </button>

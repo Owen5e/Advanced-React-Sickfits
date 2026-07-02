@@ -3,6 +3,8 @@ import { resetIdCounter, useCombobox } from 'downshift';
 import gql from 'graphql-tag';
 import debounce from 'lodash.debounce';
 import { useRouter } from 'next/dist/client/router';
+import { useMemo } from 'react';
+
 import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
 
 const SEARCH_PRODUCTS_QUERY = gql`
@@ -28,7 +30,7 @@ export default function Search() {
   });
 
   const items = data?.searchTerms || [];
-  const findItemsButChill = debounce(findItems, 500);
+  const findItemsButChill = useMemo(() => debounce(findItems, 500), [findItems]);
 
   resetIdCounter();
   const {
@@ -41,11 +43,11 @@ export default function Search() {
     isOpen
   } = useCombobox({
     items,
-    onInputValueChange() {
+    onInputValueChange({ inputValue: newInputValue }) {
       console.log('input changed');
       findItemsButChill({
         variables: {
-          searchTerm: inputValue
+          searchTerm: newInputValue
         }
       });
     },

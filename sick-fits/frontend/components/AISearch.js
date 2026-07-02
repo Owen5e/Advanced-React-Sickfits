@@ -62,7 +62,7 @@ export default function AISearch({ onResults }) {
       {/* Floating toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center z-40 hover:bg-primary-dark transition-colors"
+        className="fixed bottom-6 right-6 px-2 h-14 bg-[#16140f] text-white rounded-xl shadow-lg flex items-center justify-center z-40 hover:bg-primary-dark transition-colors"
         aria-label={isOpen ? 'Close AI search' : 'Open AI search'}
       >
         {isOpen ? (
@@ -75,41 +75,55 @@ export default function AISearch({ onResults }) {
             />
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={1.5}
-              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-            />
-          </svg>
+          <div className="flex gap-1 items-center ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="10"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ff4a17"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-astroid-icon lucide-astroid"
+            >
+              <path d="M12.983 21.186a1 1 0 0 1-1.966 0 10 10 0 0 0-8.203-8.203 1 1 0 0 1 0-1.966 10 10 0 0 0 8.203-8.203 1 1 0 0 1 1.966 0 10 10 0 0 0 8.203 8.203 1 1 0 0 1 0 1.966 10 10 0 0 0-8.203 8.203" />
+            </svg>
+            <text className=" text-[12px]">ASK STYLIST</text>
+          </div>
         )}
       </button>
 
       {/* AI Search Chat Box - Only shown when isOpen is true */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-120 h-100 bg-white border border-neutral-300 rounded-xl shadow-lg flex flex-col z-40">
+        <div className="fixed bottom-24 right-6 max-w-120 h-100 bg-[#f4f1ea] border border-neutral-300 rounded-xl shadow-lg flex flex-col z-40">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-neutral-300 flex items-center justify-between">
+          <div className="px-2 py-2 border-b border-neutral-300 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#16140f] rounded-xl flex items-center justify-center">
                 <svg
-                  className="w-4 h-4 text-primary"
-                  fill="none"
-                  stroke="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ff4a17"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-astroid-icon lucide-astroid"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
+                  <path d="M12.983 21.186a1 1 0 0 1-1.966 0 10 10 0 0 0-8.203-8.203 1 1 0 0 1 0-1.966 10 10 0 0 0 8.203-8.203 1 1 0 0 1 1.966 0 10 10 0 0 0 8.203 8.203 1 1 0 0 1 0 1.966 10 10 0 0 0-8.203 8.203" />
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-neutral-800">AI Search Assistant</h3>
-                <p className="text-xs text-neutral-500">Ask for product recommendations</p>
+                <h3 className="font-semibold text-[#16140f]">Stylist</h3>
+                <p className="text-xs text-neutral-500 ">
+                  AI concierge
+                  <span className="px-1">.</span>
+                  online
+                </p>
               </div>
             </div>
             <button
@@ -129,39 +143,32 @@ export default function AISearch({ onResults }) {
           </div>
 
           {/* Messages container */}
-          <div className="flex-1 p-4 overflow-y-auto">
+          <div className="flex-1 px-2 py-4 overflow-y-auto">
             {messages.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center text-neutral-500">
-                <svg
-                  className="w-10 h-10 mb-3 text-neutral-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                  />
-                </svg>
-                <p className="text-sm font-medium text-neutral-700 mb-1">How can I help you?</p>
-                <p className="text-xs text-neutral-500">
-                  Try asking for specific products or filters
+              <div className="h-full flex flex-col  space-y-2 ">
+                <h3 className="w-[150px] text-[#16140f] font-bold text-[22px] ">
+                  What are you <span className="text-[#ff4a17] ">looking for?</span>
+                </h3>
+                <p className="text-xs font-mono  text-[#807A6C] word-spacing:1rem ">
+                  Describe a vibe, a budget, or a brand.
                 </p>
-                <div className="mt-4 space-y-2">
-                  <button
-                    onClick={() => setQuery('Show me red shoes under $50')}
-                    className="text-xs px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg transition-colors"
-                  >
-                    "Show me red shoes under $50"
-                  </button>
-                  <button
-                    onClick={() => setQuery('Find comfortable running shoes')}
-                    className="text-xs px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg transition-colors"
-                  >
-                    "Find comfortable running shoes"
-                  </button>
+                <div className="flex flex-col space-y-2">
+                  <div className="px-2 py-1 border border-black rounded-md bg-transparent hover:bg-white flex items-center ">
+                    <button
+                      onClick={() => setQuery('Mad game pro shoes')}
+                      className="text-start text-sm  text-neutral-700  transition-colors"
+                    >
+                      Show me mad game pro shoes
+                    </button>
+                  </div>
+                  <div className="px-2 py-1 border border-black rounded-md bg-transparent hover:bg-white flex items-center ">
+                    <button
+                      onClick={() => setQuery('shoes under $500')}
+                      className="text-start text-sm  text-neutral-700  transition-colors"
+                    >
+                      shoes under $500
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -221,26 +228,46 @@ export default function AISearch({ onResults }) {
           </div>
 
           {/* Input area */}
-          <div className="w-full border-t border-neutral-300 p-4">
-            <div className="flex space-x-2 w-full">
+          <div className="w-full border-t border-neutral-300 p-2">
+            <div className="flex px-1 py-1 bg-white w-full border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
               <input
                 type="text"
-                placeholder="Ask AI to search..."
+                placeholder="Describe what you want..."
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 onKeyPress={e => e.key === 'Enter' && handleSearch()}
-                className="flex-1 min-w-0 px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                className=" w-full text-sm focus:outline-none"
                 disabled={loading}
               />
               <button
                 onClick={handleSearch}
                 disabled={loading || !query.trim()}
-                className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap text-sm"
+                className="px-2 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap text-sm"
               >
-                {loading ? '...' : 'Send'}
+                {loading ? (
+                  '...'
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-arrow-right-icon lucide-arrow-right"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                )}
               </button>
             </div>
-            <p className="text-xs text-neutral-500 mt-2 text-center">AI-powered product search</p>
+            <p className="text-xs font-mono  text-[#807A6C] mt-2 text-center">
+              Tap a result to drop it in your bag
+            </p>
           </div>
         </div>
       )}

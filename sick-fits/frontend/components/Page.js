@@ -16,10 +16,26 @@ export default function Page({ children }) {
     <div>
       <Header />
       <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-4 px-4 sm:px-6 lg:px-8 py-4">
-        <div>
-          <span className={`${spaceMono.className} pr-2`}>SS26</span>
-          <span className={`${spaceMono.className} pr-2 text-[#ff4a17]`}>/</span>
-          <span className={`${spaceMono.className}`}>THE TRENDY VIBE</span>
+        <div className=" ">
+          <p className="flex text-[#ff4a17] ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-minus-icon lucide-minus"
+            >
+              <path d="M5 12h14" />
+            </svg>
+            <span className={`${spaceMono.className} pr-2`}>SS26</span>
+            <span className={`${spaceMono.className} pr-2 text-[#ff4a17]`}>/</span>
+            <span className={`${spaceMono.className}`}>THE TRENDY VIBE</span>
+          </p>
           <p className="text-7xl w-[300px] md:text-9xl md:w-[600px] font-black ">
             WEAR THE <span className="text-[#ff4a17] italic ">BUILD</span>.
           </p>

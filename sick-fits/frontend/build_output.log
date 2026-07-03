@@ -1,0 +1,97 @@
+nohup: ignoring input
+   Linting and checking validity of types ...
+
+./pages/account.js
+266:15  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+300:15  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./pages/category/[slug].js
+152:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./pages/order/[id].js
+67:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./pages/order.js
+76:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/AddToCart.js
+30:39  Warning: 'data' is assigned a value but never used.  no-unused-vars
+87:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/AISearch.js
+64:9  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+130:15  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+158:23  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+166:23  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+192:29  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+237:17  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+238:17  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+243:17  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/Cart.js
+20:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/Checkout.js
+50:10  Warning: 'loading' is assigned a value but never used.  no-unused-vars
+99:25  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/CreateProduct.js
+33:33  Warning: 'resetForm' is assigned a value but never used.  no-unused-vars
+45:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/DeleteProduct.js
+30:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/Header.js
+151:16  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/Nav.js
+181:9  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/Page.js
+4:8  Warning: 'Categories' is defined but never used.  no-unused-vars
+60:17  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/RequestReset.js
+21:26  Warning: 'loading' is assigned a value but never used.  no-unused-vars
+42:25  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/Reset.js
+23:25  Warning: 'loading' is assigned a value but never used.  no-unused-vars
+41:25  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/Search.js
+28:38  Warning: 'error' is assigned a value but never used.  no-unused-vars
+79:15  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+84:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/SignIn.js
+101:25  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/SignOut.js
+30:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+31:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/SignUp.js
+88:25  Warning: JSX props should not use functions  react/jsx-no-bind
+
+./components/SingleProduct.js
+55:7  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+61:31  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/UpdateProduct.js
+40:33  Warning: 'updateData' is assigned a value but never used.  no-unused-vars
+48:33  Warning: 'resetForm' is assigned a value but never used.  no-unused-vars
+48:44  Warning: 'clearForm' is assigned a value but never used.  no-unused-vars
+54:7  Warning: JSX props should not use arrow functions  react/jsx-no-bind
+
+./components/User.js
+33:33  Warning: 'refetch' is assigned a value but never used.  no-unused-vars
+
+./lib/paginationField.js
+54:21  Warning: 'first' is assigned a value but never used.  no-unused-vars
+57:54  Warning: Unary operator '++' used.  no-plusplus
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+   Creating an optimized^Croduction build ...
+^C

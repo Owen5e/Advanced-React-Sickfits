@@ -3,11 +3,11 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_BACKEND_URL": "https://advanced-react-sickfits-production.up.railway.app"
+    "NEXT_PUBLIC_BACKEND_URL": "https://api.owenstack.com"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_BACKEND_URL": "https://advanced-react-sickfits-production.up.railway.app"
+      "NEXT_PUBLIC_BACKEND_URL": "https://api.owenstack.com"
     }
   }
 }

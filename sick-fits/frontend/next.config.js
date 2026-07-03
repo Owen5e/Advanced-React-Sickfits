@@ -1,7 +1,7 @@
 module.exports = {
   reactStrictMode: false,
   images: {
-    domains: ['advanced-react-sickfits-production.up.railway.app']
+    domains: ['api.owenstack.com']
   },
   compiler: {
     styledComponents: true

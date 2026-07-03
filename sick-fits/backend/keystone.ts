@@ -25,7 +25,7 @@ const databaseURL =
 // destructures sameSite and secure as TOP-LEVEL properties, not from a nested
 // cookie object. Nesting them under `cookie: {}` meant they were never read,
 // so sameSite silently defaulted to 'lax' — which blocks cross-origin cookies
-// when the frontend (Vercel) and backend (Railway) are on different domains.
+// when the frontend (Vercel) and backend are on different domains.
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // how long they stay signed in?
   secret: process.env.COOKIE_SECRET,

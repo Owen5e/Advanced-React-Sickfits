@@ -10,7 +10,7 @@
     "test": "set NODE_ENV=test && jest --watch"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apollo/client": "3.6.9",
     "@stripe/react-stripe-js": "^1.1.2",

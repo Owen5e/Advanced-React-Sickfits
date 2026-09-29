@@ -3,7 +3,7 @@
 exports[`<RequestReset/> renders and matches snapshot 1`] = `
 <div>
   <form
-    class="Form-sc-1xszr8q-0 hVEEdl"
+    class="sc-90deea02-0 eFvKtL"
     method="POST"
   >
     <h2>

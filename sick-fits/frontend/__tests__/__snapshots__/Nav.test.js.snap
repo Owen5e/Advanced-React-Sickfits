@@ -1,120 +1,571 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Nav/> Renders and minimal nav when signed out 1`] = `
+exports[`<Nav/> renders a full nav when signed in 1`] = `
 <div>
-  <ul
-    class="NavStyles-sc-11c0d2g-0 jofUXi"
-  >
-    <a
-      href="/products"
+  <div>
+    <button
+      aria-label="Toggle navigation menu"
+      class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary-light rounded-md p-2"
+      type="button"
     >
-      Products
-    </a>
-    <a
-      href="/signin"
+      <div
+        class="w-6 h-6 flex flex-col justify-center items-center"
+      >
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+        <span
+          class="block h-0.5 w-6 bg-white my-1 transition-opacity duration-300 opacity-100"
+        />
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+      </div>
+    </button>
+    <nav
+      class="w-full"
     >
-      Sign In
-    </a>
-  </ul>
+      <div
+        class="className hidden md:grid w-full grid-cols-2 items-center"
+      >
+        <div
+          class="flex items-center gap-6 justify-self-center"
+        >
+          <div
+            class="flex items-center gap-6"
+          >
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/order"
+            >
+              Orders
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/sell"
+            >
+              Sell
+            </a>
+          </div>
+        </div>
+        <div
+          class="flex items-center gap-6 justify-self-end"
+        >
+          <button
+            aria-controls="header-search"
+            aria-expanded="false"
+            aria-label="Toggle search"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="18"
+              viewBox="0 0 24 24"
+              width="18"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M20 20L16.65 16.65"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+          <a
+            aria-label="Account"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center border-b-2 border-transparent"
+            href="/account"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="20"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M4 20c0-4 3.6-8 8-8s8 4 8 8"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </a>
+          <button
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center md:py-0 md:px-0"
+            type="button"
+          >
+            <span
+              class="ml-1 pb-0.5"
+            >
+              🛒 
+            </span>
+            <span>
+              Bag 
+            </span>
+            <span
+              class="sc-8353ba04-1 KHXoz"
+            >
+              <div>
+                <div
+                  class="sc-8353ba04-0 ckkAPa"
+                >
+                  0
+                </div>
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="md:hidden absolute top-full left-0 right-0 bg-secondary-dark shadow-lg z-50 transition-all duration-300 ease-in-out opacity-0 transform -translate-y-4 pointer-events-none"
+    >
+      <div
+        class="flex flex-col py-4 px-4"
+      >
+        <div
+          class="className flex flex-col gap-2"
+        >
+          <button
+            class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-[#ff4a17] text-black text-left"
+            type="button"
+          >
+            Search
+          </button>
+          <div
+            class="flex items-center gap-6"
+          >
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/order"
+            >
+              Orders
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/sell"
+            >
+              Sell
+            </a>
+          </div>
+          <a
+            class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+            href="/account"
+          >
+            Account
+          </a>
+          <button
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center py-2 px-4"
+            type="button"
+          >
+            <span
+              class="ml-1 pb-0.5"
+            >
+              🛒 
+            </span>
+            <span>
+              Bag 
+            </span>
+            <span
+              class="sc-8353ba04-1 KHXoz"
+            >
+              <div>
+                <div
+                  class="sc-8353ba04-0 ckkAPa"
+                >
+                  0
+                </div>
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
-exports[`<Nav/> renders a full nav when signed in 1`] = `
+exports[`<Nav/> renders a minimal nav when signed out 1`] = `
 <div>
-  <ul
-    class="NavStyles-sc-11c0d2g-0 jofUXi"
-  >
-    <a
-      href="/products"
-    >
-      Products
-    </a>
-    <a
-      href="/order"
-    >
-      Orders
-    </a>
-    <a
-      href="/sell"
-    >
-      Sell
-    </a>
-    <a
-      href="/account"
-    >
-      Account
-    </a>
+  <div>
     <button
+      aria-label="Toggle navigation menu"
+      class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary-light rounded-md p-2"
       type="button"
     >
-      SignOut
-    </button>
-    <button
-      type="button"
-    >
-      My Cart
-      <span
-        class="CartCount__AnimationStyles-sc-xxvp4g-1 gwXiGr"
+      <div
+        class="w-6 h-6 flex flex-col justify-center items-center"
       >
-        <div>
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+        <span
+          class="block h-0.5 w-6 bg-white my-1 transition-opacity duration-300 opacity-100"
+        />
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+      </div>
+    </button>
+    <nav
+      class="w-full"
+    >
+      <div
+        class="className hidden md:grid w-full grid-cols-2 items-center"
+      >
+        <div
+          class="flex items-center gap-6 justify-self-center"
+        >
           <div
-            class="CartCount__Dot-sc-xxvp4g-0 iephzA"
+            class="flex items-center gap-6"
           >
-            0
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
           </div>
         </div>
-      </span>
-    </button>
-  </ul>
+        <div
+          class="flex items-center gap-6 justify-self-end"
+        >
+          <button
+            aria-controls="header-search"
+            aria-expanded="false"
+            aria-label="Toggle search"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="18"
+              viewBox="0 0 24 24"
+              width="18"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M20 20L16.65 16.65"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+          <a
+            aria-label="Sign In"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center border-b-2 border-transparent"
+            href="/signin"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="20"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M4 20c0-4 3.6-8 8-8s8 4 8 8"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="md:hidden absolute top-full left-0 right-0 bg-secondary-dark shadow-lg z-50 transition-all duration-300 ease-in-out opacity-0 transform -translate-y-4 pointer-events-none"
+    >
+      <div
+        class="flex flex-col py-4 px-4"
+      >
+        <div
+          class="className flex flex-col gap-2"
+        >
+          <button
+            class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-[#ff4a17] text-black text-left"
+            type="button"
+          >
+            Search
+          </button>
+          <div
+            class="flex items-center gap-6"
+          >
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
 exports[`<Nav/> renders the amount of items in the cart 1`] = `
 <div>
-  <ul
-    class="NavStyles-sc-11c0d2g-0 jofUXi"
-  >
-    <a
-      href="/products"
-    >
-      Products
-    </a>
-    <a
-      href="/order"
-    >
-      Orders
-    </a>
-    <a
-      href="/sell"
-    >
-      Sell
-    </a>
-    <a
-      href="/account"
-    >
-      Account
-    </a>
+  <div>
     <button
+      aria-label="Toggle navigation menu"
+      class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary-light rounded-md p-2"
       type="button"
     >
-      SignOut
-    </button>
-    <button
-      type="button"
-    >
-      My Cart
-      <span
-        class="CartCount__AnimationStyles-sc-xxvp4g-1 gwXiGr"
+      <div
+        class="w-6 h-6 flex flex-col justify-center items-center"
       >
-        <div>
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+        <span
+          class="block h-0.5 w-6 bg-white my-1 transition-opacity duration-300 opacity-100"
+        />
+        <span
+          class="block h-0.5 w-6 bg-white transform transition-transform duration-300 "
+        />
+      </div>
+    </button>
+    <nav
+      class="w-full"
+    >
+      <div
+        class="className hidden md:grid w-full grid-cols-2 items-center"
+      >
+        <div
+          class="flex items-center gap-6 justify-self-center"
+        >
           <div
-            class="CartCount__Dot-sc-xxvp4g-0 iephzA"
+            class="flex items-center gap-6"
           >
-            3
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/order"
+            >
+              Orders
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/sell"
+            >
+              Sell
+            </a>
           </div>
         </div>
-      </span>
-    </button>
-  </ul>
+        <div
+          class="flex items-center gap-6 justify-self-end"
+        >
+          <button
+            aria-controls="header-search"
+            aria-expanded="false"
+            aria-label="Toggle search"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="18"
+              viewBox="0 0 24 24"
+              width="18"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M20 20L16.65 16.65"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+          <a
+            aria-label="Account"
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center border-b-2 border-transparent"
+            href="/account"
+          >
+            <svg
+              aria-hidden="true"
+              fill="none"
+              height="20"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M4 20c0-4 3.6-8 8-8s8 4 8 8"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </svg>
+          </a>
+          <button
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center md:py-0 md:px-0"
+            type="button"
+          >
+            <span
+              class="ml-1 pb-0.5"
+            >
+              🛒 
+            </span>
+            <span>
+              Bag 
+            </span>
+            <span
+              class="sc-8353ba04-1 KHXoz"
+            >
+              <div>
+                <div
+                  class="sc-8353ba04-0 ckkAPa"
+                >
+                  3
+                </div>
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <div
+      class="md:hidden absolute top-full left-0 right-0 bg-secondary-dark shadow-lg z-50 transition-all duration-300 ease-in-out opacity-0 transform -translate-y-4 pointer-events-none"
+    >
+      <div
+        class="flex flex-col py-4 px-4"
+      >
+        <div
+          class="className flex flex-col gap-2"
+        >
+          <button
+            class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-[#ff4a17] text-black text-left"
+            type="button"
+          >
+            Search
+          </button>
+          <div
+            class="flex items-center gap-6"
+          >
+            <a
+              class="text-[#4a463c] hover:text-black transition-colors font-normal block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/products"
+            >
+              SHOP ALL
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/order"
+            >
+              Orders
+            </a>
+            <a
+              class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+              href="/sell"
+            >
+              Sell
+            </a>
+          </div>
+          <a
+            class="text-[#4a463c] hover:text-black hover:border-[#ff4a17] transition-colors font-medium block py-2 px-4 md:py-0 md:px-0 border-b-2 border-transparent"
+            href="/account"
+          >
+            Account
+          </a>
+          <button
+            class="text-[#4a463c] hover:text-black transition-colors font-medium flex items-center py-2 px-4"
+            type="button"
+          >
+            <span
+              class="ml-1 pb-0.5"
+            >
+              🛒 
+            </span>
+            <span>
+              Bag 
+            </span>
+            <span
+              class="sc-8353ba04-1 KHXoz"
+            >
+              <div>
+                <div
+                  class="sc-8353ba04-0 ckkAPa"
+                >
+                  3
+                </div>
+              </div>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

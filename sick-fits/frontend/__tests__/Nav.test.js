@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { render, screen } from '@testing-library/react';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import Nav from '../components/Nav';
 import { CURRENT_USER_QUERY } from '../components/User';
 import { fakeUser, fakeCartItem } from '../lib/testUtils';
@@ -30,52 +30,55 @@ const signedInWithCartMocks = [
   }
 ];
 
+const renderNav = (mocks) =>
+  render(
+    <CartStateProvider>
+      <MockedProvider mocks={mocks}>
+        <Nav />
+      </MockedProvider>
+    </CartStateProvider>
+  );
+
+// The nav renders its links twice on purpose: once for the desktop bar and once
+// inside the (always-mounted) mobile menu. Hence the getAllBy* queries.
 describe('<Nav/>', () => {
-  it('Renders and minimal nav when signed out', () => {
-    const { container, debug } = render(
-      <CartStateProvider>
-        <MockedProvider mocks={notSignedInMocks}>
-          <Nav />
-        </MockedProvider>
-      </CartStateProvider>
-    );
-    debug();
-    expect(container).toHaveTextContent('Sign In');
+  it('renders a minimal nav when signed out', () => {
+    const { container } = renderNav(notSignedInMocks);
+
+    // signed out: the account link goes to /signin and is labelled "Sign In"
+    expect(screen.getByLabelText('Sign In')).toHaveAttribute('href', '/signin');
+    expect(screen.getAllByText('SHOP ALL')[0]).toHaveAttribute('href', '/products');
+
+    // no account-only links and no bag when signed out
+    expect(screen.queryByText('Orders')).not.toBeInTheDocument();
+    expect(screen.queryByText('Sell')).not.toBeInTheDocument();
+    expect(screen.queryByText('Bag')).not.toBeInTheDocument();
+
     expect(container).toMatchSnapshot();
-    const link = screen.getByText('Sign In');
-    expect(link).toHaveAttribute('href', '/signin');
-    const productsLink = screen.getByText('Products');
-    expect(productsLink).toBeInTheDocument();
-    expect(productsLink).toHaveAttribute('href', '/products');
   });
+
   it('renders a full nav when signed in', async () => {
-    const { container, debug } = render(
-      <CartStateProvider>
-        <MockedProvider mocks={signedInMocks}>
-          <Nav />
-        </MockedProvider>
-      </CartStateProvider>
-    );
-    await screen.findByText('Account');
-    debug();
+    const { container } = renderNav(signedInMocks);
+
+    // wait for the mocked user to land
+    await screen.findByLabelText('Account');
+
+    expect(screen.getByLabelText('Account')).toHaveAttribute('href', '/account');
+    expect(screen.getAllByText('Orders')[0]).toHaveAttribute('href', '/order');
+    expect(screen.getAllByText('Sell')[0]).toHaveAttribute('href', '/sell');
+    expect(screen.getAllByText('SHOP ALL')[0]).toHaveAttribute('href', '/products');
+    expect(screen.getAllByText(/Bag/).length).toBeGreaterThan(0);
+
     expect(container).toMatchSnapshot();
-    expect(container).toHaveTextContent('SignOut');
-    expect(container).toHaveTextContent('My Cart');
   });
 
   it('renders the amount of items in the cart', async () => {
-    const { container, debug } = render(
-      <CartStateProvider>
-        <MockedProvider mocks={signedInWithCartMocks}>
-          <Nav />
-        </MockedProvider>
-      </CartStateProvider>
-    );
-    await screen.findByText('Account');
-    debug();
+    const { container } = renderNav(signedInWithCartMocks);
+
+    await screen.findByLabelText('Account');
+
+    // the mocked cart holds one item with a quantity of 3
+    expect(screen.getAllByText('3')[0]).toBeInTheDocument();
     expect(container).toMatchSnapshot();
-    expect(container).toHaveTextContent('SignOut');
-    expect(container).toHaveTextContent('My Cart');
-    expect(screen.getByText('3')).toBeInTheDocument();
   });
 });

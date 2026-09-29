@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { render, screen } from '@testing-library/react';
-import { MockedProvider } from '@apollo/react-testing';
+import { MockedProvider } from '@apollo/client/testing';
 import Product from '../components/Product';
 import { fakeItem } from '../lib/testUtils';
 

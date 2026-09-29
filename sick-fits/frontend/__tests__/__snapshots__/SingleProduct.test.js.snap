@@ -3,7 +3,7 @@
 exports[`<SingleProduct/> renders with proper data 1`] = `
 <div>
   <div
-    class="SingleProduct__ProductStyles-sc-1kapz8w-0 jnlTon"
+    class="sc-a0178267-0 ieYlNx"
     data-testid="singleProduct"
   >
     <img
@@ -23,6 +23,18 @@ exports[`<SingleProduct/> renders with proper data 1`] = `
         $
         5000
       </p>
+      <button
+        class="flex w-full justify-center items-center bg-[#16140f] hover:bg-[#ff4a17] disabled:bg-neutral-400 text-white px-4 py-2 rounded-md text-center text-[12px] font-mono font-lg transition-colors disabled:cursor-not-allowed"
+        type="button"
+      >
+        + ADD
+         TO BAG
+      </button>
+      <button
+        type="button"
+      >
+        Back
+      </button>
     </div>
   </div>
 </div>

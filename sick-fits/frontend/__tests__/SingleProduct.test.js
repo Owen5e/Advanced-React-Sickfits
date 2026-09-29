@@ -2,7 +2,7 @@
 import { MockedProvider } from '@apollo/client/testing';
 import { render, screen } from '@testing-library/react';
 import SingleProduct, { SINGLE_PRODUCT_QUERY } from '../components/SingleProduct';
-import { fakeItem } from '../lib/testUtils';
+import { fakeItem, snapshotHTML } from '../lib/testUtils';
 
 const product = fakeItem();
 const mocks = [
@@ -33,7 +33,7 @@ describe('<SingleProduct/>', () => {
     );
     // wait for test id to show up
     await screen.findByTestId('singleProduct');
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
 
   it('errors out when an item is not found', async () => {

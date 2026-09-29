@@ -2,7 +2,7 @@
 import { screen, render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import Pagination from '../components/Pagination';
-import { makePaginationMocksFor } from '../lib/testUtils';
+import { makePaginationMocksFor, snapshotHTML } from '../lib/testUtils';
 import { perPage } from '../config';
 
 // The page count is derived from `count / perPage`, so the fixtures below are
@@ -29,7 +29,7 @@ describe('<Pagination/>', () => {
     expect(pageCountSpan).toHaveTextContent('1');
     expect(container).toHaveTextContent('page 1 of 1');
     expect(container).toHaveTextContent(`${perPage} Items Total`);
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('disables the prev button on page 1', async () => {
     const { container } = render(

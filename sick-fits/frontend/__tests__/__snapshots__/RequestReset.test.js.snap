@@ -1,33 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<RequestReset/> renders and matches snapshot 1`] = `
-<div>
-  <form
-    class="Form-sc-90deea02-0 lnpLdU"
-    method="POST"
-  >
-    <h2>
-      Request Password Reset
-    </h2>
-    <fieldset>
-      <label
-        for="email"
-      >
-        Email
-        <input
-          autocomplete="email"
-          name="email"
-          placeholder="Your email address"
-          type="email"
-          value=""
-        />
-      </label>
-      <button
-        type="submit"
-      >
-        Request Reset
-      </button>
-    </fieldset>
-  </form>
-</div>
-`;
+exports[`<RequestReset/> renders and matches snapshot 1`] = `"<form method=\\"POST\\"><h2>Request Password Reset</h2><fieldset><label for=\\"email\\">Email<input type=\\"email\\" name=\\"email\\" placeholder=\\"Your email address\\" autocomplete=\\"email\\" value=\\"\\"></label><button type=\\"submit\\">Request Reset</button></fieldset></form>"`;

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
 import RequestReset, { REQUEST_RESET_MUTATION } from '../components/RequestReset';
+import { snapshotHTML } from '../lib/testUtils';
 
 const email = 'random1@yopmail.com';
 const mocks = [
@@ -25,7 +26,7 @@ describe('<RequestReset/>', () => {
         <RequestReset />
       </MockedProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('calls the mutation when submitted', async () => {
     const { container, debug } = render(

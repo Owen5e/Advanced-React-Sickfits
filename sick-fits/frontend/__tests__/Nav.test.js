@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import Nav from '../components/Nav';
 import { CURRENT_USER_QUERY } from '../components/User';
-import { fakeUser, fakeCartItem } from '../lib/testUtils';
+import { fakeCartItem, fakeUser, snapshotHTML } from '../lib/testUtils';
 import { CartStateProvider } from '../lib/cartState';
 
 // make some mocks for the user being logged out, logged in, logged in and with cart items
@@ -54,7 +54,7 @@ describe('<Nav/>', () => {
     expect(screen.queryByText('Sell')).not.toBeInTheDocument();
     expect(screen.queryByText('Bag')).not.toBeInTheDocument();
 
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
 
   it('renders a full nav when signed in', async () => {
@@ -69,7 +69,7 @@ describe('<Nav/>', () => {
     expect(screen.getAllByText('SHOP ALL')[0]).toHaveAttribute('href', '/products');
     expect(screen.getAllByText(/Bag/).length).toBeGreaterThan(0);
 
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
 
   it('renders the amount of items in the cart', async () => {
@@ -79,6 +79,6 @@ describe('<Nav/>', () => {
 
     // the mocked cart holds one item with a quantity of 3
     expect(screen.getAllByText('3')[0]).toBeInTheDocument();
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
 });

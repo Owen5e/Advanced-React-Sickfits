@@ -3,7 +3,7 @@
 import { render, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/client/testing';
 import Product from '../components/Product';
-import { fakeItem } from '../lib/testUtils';
+import { fakeItem, snapshotHTML } from '../lib/testUtils';
 
 const product = fakeItem();
 
@@ -26,7 +26,7 @@ describe('<Product/>', () => {
         <Product product={product} />
       </MockedProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('renders the image properly', () => {
     const { container, debug } = render(

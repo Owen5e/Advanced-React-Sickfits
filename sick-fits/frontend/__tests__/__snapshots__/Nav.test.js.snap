@@ -128,11 +128,11 @@ exports[`<Nav/> renders a full nav when signed in 1`] = `
               Bag 
             </span>
             <span
-              class="sc-8353ba04-1 KHXoz"
+              class="AnimationStyles-sc-8353ba04-1 kvZgxY"
             >
               <div>
                 <div
-                  class="sc-8353ba04-0 ckkAPa"
+                  class="Dot-sc-8353ba04-0 ggXesE"
                 >
                   0
                 </div>
@@ -198,11 +198,11 @@ exports[`<Nav/> renders a full nav when signed in 1`] = `
               Bag 
             </span>
             <span
-              class="sc-8353ba04-1 KHXoz"
+              class="AnimationStyles-sc-8353ba04-1 kvZgxY"
             >
               <div>
                 <div
-                  class="sc-8353ba04-0 ckkAPa"
+                  class="Dot-sc-8353ba04-0 ggXesE"
                 >
                   0
                 </div>
@@ -482,11 +482,11 @@ exports[`<Nav/> renders the amount of items in the cart 1`] = `
               Bag 
             </span>
             <span
-              class="sc-8353ba04-1 KHXoz"
+              class="AnimationStyles-sc-8353ba04-1 kvZgxY"
             >
               <div>
                 <div
-                  class="sc-8353ba04-0 ckkAPa"
+                  class="Dot-sc-8353ba04-0 ggXesE"
                 >
                   3
                 </div>
@@ -552,11 +552,11 @@ exports[`<Nav/> renders the amount of items in the cart 1`] = `
               Bag 
             </span>
             <span
-              class="sc-8353ba04-1 KHXoz"
+              class="AnimationStyles-sc-8353ba04-1 kvZgxY"
             >
               <div>
                 <div
-                  class="sc-8353ba04-0 ckkAPa"
+                  class="Dot-sc-8353ba04-0 ggXesE"
                 >
                   3
                 </div>

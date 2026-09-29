@@ -3,7 +3,7 @@
 exports[`<Pagination/> renders pagination for a full page of items 1`] = `
 <div>
   <div
-    class="sc-771ffb06-0 jZaKQo"
+    class="PaginationStyles-sc-771ffb06-0 dOXBOd"
     data-testid="pagination"
   >
     <a

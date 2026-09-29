@@ -3,7 +3,7 @@
 exports[`<CreateProduct/> renders and matches snapshot 1`] = `
 <div>
   <form
-    class="sc-90deea02-0 eFvKtL"
+    class="Form-sc-90deea02-0 lnpLdU"
   >
     <fieldset
       aria-busy="false"

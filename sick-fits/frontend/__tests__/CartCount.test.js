@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import wait from 'waait';
 import CartCount from '../components/CartCount';
+import { snapshotHTML } from '../lib/testUtils';
 
 describe('<CartCount/>', () => {
   it('Renders', () => {
@@ -8,7 +9,7 @@ describe('<CartCount/>', () => {
   });
   it('matches snapshot', () => {
     const { container } = render(<CartCount count={11} />);
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('updates via props', async () => {
     const { container, rerender, debug } = render(<CartCount count={11} />);
@@ -19,6 +20,6 @@ describe('<CartCount/>', () => {
     expect(container.textContent).toBe('1211');
     await wait(400);
     expect(container.textContent).toBe('12');
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
 });

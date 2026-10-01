@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Router from 'next/router'; //we will mock this
 import CreateProduct, { CREATE_PRODUCT_MUTATION } from '../components/CreateProduct';
 import { ALL_PRODUCTS_QUERY } from '../components/Products';
-import { fakeItem, makePaginationMocksFor } from '../lib/testUtils';
+import { fakeItem, makePaginationMocksFor, snapshotHTML } from '../lib/testUtils';
 import wait from 'waait';
 
 const item = fakeItem();
@@ -20,7 +20,7 @@ describe('<CreateProduct/>', () => {
         <CreateProduct />
       </MockedProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('handles the updating', async () => {
     //1. render the form out

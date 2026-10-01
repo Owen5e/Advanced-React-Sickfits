@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import userEvent from '@testing-library/user-event';
 import Signup, { SIGNUP_MUTATION } from '../components/SignUp';
 import { CURRENT_USER_QUERY } from '../components/User';
-import { fakeUser } from '../lib/testUtils';
+import { fakeUser, snapshotHTML } from '../lib/testUtils';
 
 const me = fakeUser();
 const password = 'test123';
@@ -44,7 +44,7 @@ describe('<SignUp/>', () => {
         <Signup />
       </MockedProvider>
     );
-    expect(container).toMatchSnapshot();
+    expect(snapshotHTML(container)).toMatchSnapshot();
   });
   it('calls the mutation properly', async () => {
     const { container, debug } = render(

@@ -1,0 +1,103 @@
+name: CI
+
+# The TrendyFits monorepo has no root package.json: it is two independent
+# packages sitting side by side under sick-fits/, so every job has to cd into
+# the package it is testing (working-directory below). Node 16 is pinned for
+# both because the Keystone 5 backend is built on Next 10 / webpack 4, whose
+# md4 hashing is removed in OpenSSL 3 (Node 17+).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Never let an older run of the same branch race a newer one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend — lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: sick-fits/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: sick-fits/frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      # next lint reads .eslintrc.json (extends next/core-web-vitals).
+      # Warnings are allowed; only errors fail the build.
+      - name: Lint
+        run: npx next lint
+
+      # jest is run in CI mode: no watch, and a changed snapshot fails the job
+      # rather than being silently rewritten.
+      - name: Test
+        run: npm test
+        env:
+          NODE_ENV: test
+
+      - name: Build
+        run: npm run build
+
+  backend:
+    name: Backend — build, typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: sick-fits/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: npm
+          cache-dependency-path: sick-fits/backend/package-lock.json
+
+      # postinstall runs patch-package, so the two patches in patches/ are
+      # applied as part of the install.
+      - name: Install
+        run: npm ci
+
+      - name: Build (keystone-next)
+        run: npm run build
+        env:
+          # The Keystone config is loaded at build time, so every value the
+          # config reads has to exist. The Cloudinary adapter throws outright
+          # without credentials, and the session secret is validated as well.
+          # These are placeholders, not secrets: nothing here talks to a real
+          # account, and none of them are baked into the build output.
+          CLOUDINARY_CLOUD_NAME: ci-placeholder
+          CLOUDINARY_KEY: ci-placeholder
+          CLOUDINARY_SECRET: ci-placeholder
+          COOKIE_SECRET: ci-build-only-not-a-real-secret
+          DATABASE_URL: mongodb://localhost:27017/keystone-ci
+          MAIL_HOST: localhost
+          MAIL_PORT: 2525
+          MAIL_USER: ci@example.com
+          MAIL_PASS: ci
+          STRIPE_SECRET: sk_test_ci_placeholder
+          FRONTEND_URL: http://localhost:7777
+
+      # NON-BLOCKING ON PURPOSE. `tsc --noEmit` currently reports pre-existing
+      # type errors in lib/mail.ts, lib/stripe.ts, mutations/checkout.ts,
+      # schemas/ProductImage.ts and seed-data/index.ts (see log/2026-09-29.md).
+      # The step is kept visible so the debt cannot be forgotten, but it must
+      # not paint the repo red while it is still someone's future task.
+      - name: Typecheck (known pre-existing errors — not yet a gate)
+        continue-on-error: true
+        run: npx tsc --noEmit

@@ -1,0 +1,28 @@
+# Root .gitignore for the TrendyFits monorepo.
+# There was none before 2026-10-01, which is how sick-fits/node_modules and a
+# 60 MB set of Node installers ended up tracked. Patterns here are repo-wide.
+
+# --- Node toolchain installers: NEVER commit these ---
+# (Day 9 cleanup, 2026-10-01: sick-fits/backend had node-v20.18.0-x64.msi,
+#  node-v22.12.0-x64.msi and nvm-setup.exe committed, 60.14 MB of the 62.58 MB tree)
+*.msi
+*.exe
+nvm-setup*
+node-v*-x64.msi
+
+# --- Dependencies ---
+# The per-package .gitignore files cover their own node_modules/, but nothing
+# covered sick-fits/node_modules/ — so sick-fits/node_modules/.package-lock.json
+# was committed. This root pattern closes that gap.
+node_modules/
+
+# --- OS / editor noise ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*~
+
+# --- Logs ---
+*.log

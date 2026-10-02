@@ -1,0 +1,50 @@
+# Dependabot version updates.
+#
+# TrendyFits has no root package.json - two independent packages under sick-fits/.
+#
+# Weekly. Minor + patch bumps are grouped into a single PR per package so the
+# noise stays low; a major bump always arrives on its own branch so it gets read
+# before it lands. Complements the security updates Dependabot already opens.
+#
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates
+
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/sick-fits/backend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      backend-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "npm"
+    directory: "/sick-fits/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    groups:
+      frontend-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"

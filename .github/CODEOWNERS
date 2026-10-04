@@ -1,0 +1,4 @@
+# Everything in this repository is owned by its maintainer.
+# CODEOWNERS only requests review from people with write access, so this is
+# @Owen5e until someone else is added as a collaborator.
+*       @Owen5e

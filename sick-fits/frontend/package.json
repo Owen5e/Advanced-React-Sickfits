@@ -1,7 +1,7 @@
 {
-  "name": "sick-fits-frontend",
+  "name": "trendyfits-frontend",
   "version": "2.0.0",
-  "description": "Sick Fits! An example React, GraphQL, Next and Apollo",
+  "description": "TrendyFits — Next.js + Apollo storefront with AI stylist search and category browsing.",
   "main": "index.js",
   "scripts": {
     "dev": "next -p 7777",

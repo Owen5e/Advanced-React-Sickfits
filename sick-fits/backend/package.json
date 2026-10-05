@@ -1,6 +1,7 @@
 {
-  "name": "sick-fits-backend",
+  "name": "trendyfits-backend",
   "version": "2.0.0",
+  "description": "TrendyFits backend — Keystone.js GraphQL API and data layer.",
   "private": true,
   "author": "Wes Bos",
   "license": "MIT",

@@ -1,0 +1,465 @@
+# TrendyFits — end-to-end status
+
+**Audited:** 2026-10-08 (Day 16)
+**Auditor's method:** cloned/updated the repo to `main` @ `24e7aa8`, then ran the two packages
+exactly as the root README instructs, as a stranger with no prior knowledge of the project would.
+Every claim below carries a repro step and the observed output.
+**Audited commit:** `24e7aa8` — "docs(readme): add root README — what/why/stack/run/deploy for the
+two-package monorepo" (2026-10-06)
+
+---
+
+## 1. Starting it — the exact two-package startup
+
+There is **no root `package.json`** and no workspace. `sick-fits/` is a folder. Every command runs
+from inside the package it belongs to. This is the whole startup, in order.
+
+### 0. Node 16 is mandatory — check it first
+
+```bash
+node --version          # must print v16.x
+```
+
+Observed on the audit machine, with no nvm step:
+
+```
+$ node --version
+v26.2.0
+```
+
+That fails the build. Fix with nvm-windows (Node 16.20.2 is installed alongside):
+
+```bash
+nvm use 16.20.2
+node --version          # v16.20.2
+npm  --version          # 8.19.4
+```
+
+Why it matters: the Keystone 5 backend renders its admin UI with Next 10 / webpack 4, whose `md4`
+hash was removed in OpenSSL 3. Node 17+ breaks it. The README says this; it is correct.
+
+### 1. Backend — the GraphQL API and admin UI
+
+```bash
+cd sick-fits/backend
+npm ci                      # postinstall runs patch-package; the patches in patches/ must apply
+```
+
+Create `sick-fits/backend/.env`. **There is no `.env.example` in the repo**
+(`git ls-files | grep -i env` prints nothing), so this list is the only specification of it — it is
+transcribed from the root README, and the Keystone config is evaluated at start, so **all** of these
+must exist or the process exits:
+
+```dotenv
+DATABASE_URL=mongodb://localhost:27017/trendyfits   # or a mongodb+srv:// Atlas string
+COOKIE_SECRET=<any long random string>
+CLOUDINARY_CLOUD_NAME=<cloudinary cloud name>
+CLOUDINARY_KEY=<cloudinary key>
+CLOUDINARY_SECRET=<cloudinary secret>
+STRIPE_SECRET=sk_test_<stripe test key>
+MAIL_HOST=smtp.ethereal.email
+MAIL_PORT=587
+MAIL_USER=<smtp user>
+MAIL_PASS=<smtp password>
+FRONTEND_URL=http://localhost:7777
+```
+
+Then:
+
+```bash
+npm run dev                 # keystone-next
+```
+
+**The line that means it is up** — wait for this before touching the frontend:
+
+```
+👋 Admin UI and graphQL API ready
+```
+
+Endpoints once it is up:
+
+| URL | Observed |
+| --- | --- |
+| `http://localhost:3000/api/graphql` | GraphQL API |
+| `http://localhost:3000/admin` | `302` (redirects to sign-in) |
+| `http://localhost:3000/admin/signin` | `302` |
+| `http://localhost:3000/__keystone_dev_status` | `{"ready":true}` |
+
+On first ever run Keystone creates the initial admin from `initFirstItem` (`name`, `email`,
+`password`). Optional: `npm run seed-data`.
+
+> **Read §3 before you plan around this.** On the audit machine the backend reached ready on
+> **1 attempt out of 5**. The other four stalled and died. See BUG-1.
+
+### 2. Frontend — the storefront
+
+```bash
+cd sick-fits/frontend
+npm ci
+npm run dev                 # next -p 7777
+```
+
+Expected and observed:
+
+```
+▲ Next.js 13.5.11
+- Local:        http://localhost:7777
+- Environments: .env.local, .env
+✓ Ready in 32.4s
+```
+
+`/` returns `308` (permanent redirect) to `/products`. Start the backend first — in development the
+Apollo client resolves to `http://localhost:3000/api/graphql`.
+
+### 3. What the API is called from the frontend
+
+`sick-fits/frontend/lib/withData.js` `getEndpoint()` resolves in this order, and the **first** match
+wins:
+
+1. `process.env.NEXT_PUBLIC_BACKEND_URL` — `/api/graphql` is appended unless already present.
+2. `?useLocal=true` in the URL.
+3. `http://localhost:3000/api/graphql` when the page is on `localhost` / `127.0.0.1`.
+4. `https://api.owenstack.com/api/graphql`.
+
+Rule 1 outranks rule 3, and this matters — see GAP-6.
+
+---
+
+## 2. Verified working end to end
+
+Run with the backend up, Node 16, frontend on `:7777`.
+
+| Check | Command | Observed |
+| --- | --- | --- |
+| Products, server-rendered | `curl -s http://localhost:7777/products \| wc -c` | `200`, **59,973 bytes** |
+| Product count | `curl -s -X POST http://localhost:3000/api/graphql -H 'Content-Type: application/json' -d '{"query":"{ _allProductsMeta { count } }"}'` | `{"data":{"_allProductsMeta":{"count":67}}}` |
+| Products returned | `... -d '{"query":"{ allProducts(first: 3) { name price status } }"}'` | `Damba men's Off-white 12000 Available`, `Mad Game Pro 30000 Available`, `Uniqlo Flannel 150000 Available` |
+| Home redirect | `curl -o /dev/null -w '%{http_code}' http://localhost:7777/` | `308` |
+| Category | `curl -o /dev/null -w '%{http_code}' http://localhost:7777/category/hoodies` | `200` |
+| Pagination to the last page | `curl -o /dev/null -w '%{http_code} %{size_download}' 'http://localhost:7777/products?page=6'` | `200 49684` |
+| Sell / signin / account | same for `/sell`, `/signin`, `/account` | `200`, `200`, `200` |
+| Unknown route | `curl -o /dev/null -w '%{http_code}' http://localhost:7777/nope-xyz` | `404` |
+
+`/products` really does contain the catalogue in the HTML: 12 `<img>` tags, product links
+(`href="/product/69cd76…"`), prices (`$120`), `+ ADD TO BAG`, and the category links
+(hoodies, shoes, trousers, outerwear, t-shirts).
+
+**Test suite** — the README's claim that "100% of the suite must pass" holds:
+
+```
+$ cd sick-fits/frontend && npm test        # jest --ci, Node 16
+Test Suites: 10 passed, 10 total
+Tests:       29 passed, 29 total
+Snapshots:   11 passed, 11 total
+Time:        98.059 s
+```
+
+---
+
+## 3. Bugs, gaps and unknowns
+
+### BUG-1 — the backend dev server usually does not come up (SEVERITY: blocking)
+
+Five attempts, on Node 16, all with `cd sick-fits/backend && npm run dev`:
+
+| Attempt | Result | How long before failure |
+| --- | --- | --- |
+| 1 | **reached `👋 Admin UI and graphQL API ready`**, served GraphQL and `/admin` | ready in ~90 s, then exited code 1 after ~622 s |
+| 2 | never bound `:3000` | exited code 1 after 293 s |
+| 3 | never bound `:3000` | no port after 315 s |
+| 4 (frontend stopped) | never bound `:3000` | no port after 260 s |
+| 5 (`NODE_OPTIONS=--max-old-space-size=4096`) | never bound `:3000` | no port after 240 s |
+
+Attempts 2–5 all stop at the same line and never continue:
+
+```
+✨ Preparing Next.js app
+Browserslist: caniuse-lite is outdated. Please run:
+npx browserslist@latest --update-db
+(node:NNNNN) [DEP0148] DeprecationWarning: Use of deprecated folder mapping "./" in the "exports"
+field module resolution of the package at .../node_modules/@keystone-next/admin-ui/node_modules/postcss/package.json.
+info  - Using external babel configuration from .../sick-fits/backend/package.json
+```
+
+…and then the process is gone. **No error, no stack, no non-zero exit message is printed** — the log
+simply ends. Attempt 1 got past the same point with `event - compiled successfully`.
+
+Repro:
+
+```bash
+nvm use 16.20.2
+cd sick-fits/backend && npm run dev
+# watch for the two "Preparing Next.js app" / "Using external babel configuration" lines,
+# then check whether :3000 ever binds:
+netstat -ano | grep LISTENING | grep :3000
+```
+
+**Ruled out by experiment:** insufficient heap (4 GB made no difference), and contention from the
+frontend dev server (it still failed with the frontend stopped).
+**Not yet ruled out:** the repo sitting in a **OneDrive-synced folder** (`OneDrive.Sync.Service.exe`
+is running on the machine), a stale `.keystone/` admin build cache, and a Keystone 5.9.3.1 admin-UI
+Next 10 build quirk on Node 16.
+**Actionable suggestion:** clone to a path outside OneDrive before concluding anything, and delete
+`sick-fits/backend/.keystone` between attempts.
+
+### BUG-2 — `/products?page=N` has no upper bound
+
+Only 6 pages exist (67 products). The 7th and 99th still return `200` with a full page shell and
+**zero products**, and no "no results" message:
+
+```bash
+curl -s -o /dev/null -w '%{http_code} %{size_download}\n' 'http://localhost:7777/products?page=7'
+# 200 33355
+curl -s 'http://localhost:7777/products?page=7' | grep -c 'href="/product/'
+# 0
+curl -s 'http://localhost:7777/products?page=99' | grep -c 'href="/product/'
+# 0
+```
+
+A user who edits `?page=` gets a blank catalogue with no explanation.
+
+### BUG-3 — the product page is not server-rendered with product data
+
+`/products` renders its catalogue into the HTML. `/product/<id>` does not:
+
+```bash
+curl -s -o /dev/null -w '%{http_code} %{size_download}\n' http://localhost:7777/product/69cd76336cf328431473134c
+# 200 18154
+```
+
+Its `__NEXT_DATA__` contains only the query, no product:
+
+```json
+{"props":{"pageProps":{"query":{"id":"69cd76336cf328431473134c"}}}}
+```
+
+…versus `/products`, whose SSR HTML carries 12 images, product links and prices. A crawler, a
+link-preview bot, or any user without JavaScript gets a product page with no product on it.
+
+### BUG-4 — with the API unreachable the storefront shows "Loading…" forever
+
+With nothing listening on `:3000`:
+
+```bash
+curl -s -o /dev/null -w '%{http_code} %{size_download}\n' http://localhost:7777/products
+# 200 16549
+curl -s http://localhost:7777/products | grep -c 'href="/product/'
+# 0
+```
+
+`200`, 16.5 KB, no products, no `<title>`. In a real browser the page renders its header, marquee and
+footer and then sits on **"Loading…"** indefinitely — it never reaches an error state and tells the
+user nothing.
+
+That is not a white screen, so it is not quite the failure the README describes. The README says
+"every query has an error path, so a stale or sleeping API shows the failure rather than a white
+screen"; what is actually observed is a permanent loading state. Either the error path is not
+reached, or "Loading…" *is* the failure path and it is indistinguishable from a slow network.
+
+### GAP-5 — `sick-fits/package-lock.json` promises a package that does not exist
+
+`sick-fits/` contains a committed lockfile and **no `package.json`**:
+
+```json
+{ "name": "sick-fits", "lockfileVersion": 2, "requires": true, "packages": {} }
+```
+
+A stranger reading that lockfile will do the obvious thing, and it fails:
+
+```bash
+cd sick-fits && npm ci
+# npm error enoent Could not read package.json: ENOENT: no such file or directory,
+#   open '.../sick-fits/package.json'
+```
+
+Either commit a real root `package.json` (even a scripts-only one) or delete the stub lockfile.
+
+### GAP-6 — the two frontend env files disagree, and `.env.local` silently wins
+
+Both exist locally (both untracked, as they should be) and set the same variable to different values:
+
+| File | `NEXT_PUBLIC_BACKEND_URL` |
+| --- | --- |
+| `sick-fits/frontend/.env` | `https://api.owenstack.com/api/graphql` |
+| `sick-fits/frontend/.env.local` | `http://localhost:3000` |
+
+Next.js gives `.env.local` precedence, so local development talks to the local API — correct, but
+only by accident of precedence. The frontend dev server reports `Environments: .env.local, .env`,
+and `getEndpoint()` stops at the first rule that matches, so the effective API can only be determined
+by knowing Next's file-precedence rules. A `.env.example` naming the variable and its default would
+remove the ambiguity.
+
+### GAP-7 — stale branding: the storefront still calls itself "Sick Fits" in three components
+
+Repro:
+
+```bash
+grep -rn "Sick Fits" sick-fits/frontend
+```
+
+| File:line | String |
+| --- | --- |
+| `components/SingleProduct.js:53` | `<title>Sick Fits \| {Product.name}</title>` |
+| `pages/account.js:172` and `:215` | `<title>Account \| Sick Fits</title>` |
+| `pages/order/[id].js:46` | `<title>Sick Fits - Order {order.id}</title>` |
+
+The brand is also set three different ways:
+
+| File:line | String |
+| --- | --- |
+| `components/Header.js:148` | `TrendyFits` |
+| `components/Pagination.js:30` | `Trendy fits - page {page} of {pageCount}` |
+| `pages/order.js:58` | `Your Orders({orders.length})` — no brand at all |
+
+Only `account`, `order` and `order/[id]` set a `<title>`. `products`, `category`, `sell`, `signin`,
+`reset` and `update` set none, so their browser tab title is inherited or empty. And
+`Your Orders(3)` is missing a space before the parenthesis.
+
+Also still carrying the upstream attribution, as the README's *Known gaps* already admits:
+
+```json
+"author": "Wes Bos",
+"repository": "https://github.com/wesbos/advanced-react"
+```
+
+### GAP-8 — the backend typecheck fails in 7 files, and the README lists 5
+
+```bash
+cd sick-fits/backend && npx tsc --noEmit; echo "exit=$?"
+# exit=2   (23 error lines)
+```
+
+| File | Errors |
+| --- | --- |
+| `mutations/checkout.ts` | 7 |
+| `seed-data/index.ts` | 5 |
+| `lib/mail.ts` | 4 |
+| **`access.ts`** | **4** |
+| `schemas/ProductImage.ts` | 1 |
+| `lib/stripe.ts` | 1 |
+| **`keystone.ts`** | **1** |
+
+The README's *Known gaps* names `lib/mail.ts`, `lib/stripe.ts`, `mutations/checkout.ts`,
+`schemas/ProductImage.ts` and `seed-data/index.ts`. **`access.ts` and `keystone.ts` are missing from
+that list**, so the CI step's non-blocking commentary is incomplete. Samples:
+
+```
+access.ts(46,26): error TS18048: 'session' is possibly 'undefined'.
+access.ts(57,26): error TS18048: 'session' is possibly 'undefined'.
+access.ts(68,35): error TS18048: 'session' is possibly 'undefined'.
+access.ts(86,18): error TS18048: 'session' is possibly 'undefined'.
+keystone.ts(98,45): error TS2345: Argument of type '{ maxAge: number; secret: string | undefined;
+  sameSite: string; secure: boolean; }' is not assignable to parameter of type 'StatelessSessionsOptions'.
+mutations/checkout.ts(57,57): error TS2339: Property 'price' does not exist on type 'ProductRelateToOneInput'.
+lib/stripe.ts(4,3): error TS2322: Type '"2022-11-15"' is not assignable to type '"2020-08-27"'.
+```
+
+`lib/stripe.ts(4,3)` is worth a second look on its own: the pinned `apiVersion` does not match the
+installed Stripe types' expected literal.
+
+### GAP-9 — local artefacts are still tracked
+
+```bash
+git ls-files | grep -iE 'cookies|\.log$|build\.|build_output|OPENSSL'
+```
+
+```
+sick-fits/frontend/OPENSSL_ERROR_EXPLANATION.md
+sick-fits/frontend/build.err
+sick-fits/frontend/build.log
+sick-fits/frontend/build_output.log
+sick-fits/frontend/cookies.txt
+```
+
+The README's *Known gaps* mentions "build logs and a `cookies.txt`". `OPENSSL_ERROR_EXPLANATION.md`
+is tracked too and is not mentioned. The root `.gitignore` added on 2026-10-01 includes `*.log`, but
+an ignore rule cannot untrack a file that is already committed — these need `git rm --cached`.
+
+### GAP-10 — anonymous callers can read every product, and the asymmetry is silent
+
+```bash
+curl -s -X POST http://localhost:3000/api/graphql -H 'Content-Type: application/json' \
+  -d '{"query":"{ _allProductsMeta { count } _allUsersMeta { count } _allOrdersMeta { count } }"}'
+```
+
+Returns the product count and `AccessDeniedError: "You do not have access to this resource"` for
+users and orders. Public read access to the catalogue is correct for a storefront; what is worth
+recording is that the denial is only visible by calling the API — the server log shows
+`"msg":"Access Denied"` and the frontend has no path that surfaces it. Note also that Keystone 5
+takes `first:` — an API consumer who tries `allProducts(take: 3)` gets
+`ValidationError: Unknown argument "take" on field "Query.allProducts"`.
+
+### Unknown-1 — is the local API reachable *from the browser*?
+
+Once, in a browser on `http://localhost:7777/products`, a `fetch` to
+`http://localhost:3000/api/graphql` failed with `TypeError: Failed to fetch` while
+`https://api.owenstack.com/api/graphql` returned `200` in the same page. **That observation is not
+evidence of a CORS fault: the local API was down at the time**, so a connection failure was the
+expected result. `keystone.ts` does list `http://localhost:7777` as an allowed origin with
+`credentials: true`. Unresolved, and it needs one run with the backend confirmed up:
+
+```bash
+curl -s -i -X OPTIONS http://localhost:3000/api/graphql \
+  -H 'Origin: http://localhost:7777' \
+  -H 'Access-Control-Request-Method: POST' \
+  -H 'Access-Control-Request-Headers: content-type'
+```
+
+### Unknown-2 — does the product page fill in client-side?
+
+`/product/<id>` ships no product data (BUG-3). Whether Apollo hydrates and fetches it successfully in
+a browser was not confirmed, because the API would not stay up long enough to hold the page open.
+
+### Unknown-3 — why does the backend exit with code 1 and no message?
+
+See BUG-1. Nothing in the log explains it, and the process does not print an error. Keystone 5 is
+unmaintained and the Mongo connection is to an Atlas cluster; an unhandled rejection on a dropped
+connection is a plausible mechanism, but that is a guess, not a finding.
+
+---
+
+## 4. Summary
+
+**Startable?** The frontend: yes, reliably, in ~32 s. The backend: once out of five attempts.
+Until BUG-1 is understood, the honest answer to "can someone else start both services from this
+document alone" is **no** — the document can describe the startup, but the backend will not
+dependably reach it.
+
+**Verified working:** the GraphQL API with 67 real products, the server-rendered catalogue with
+pagination across 6 pages, categories, the admin route, and a green 29-test suite.
+
+**Broken or risky, in priority order:**
+
+1. **BUG-1** — backend dev server unreliable, no diagnostic (blocking).
+2. **BUG-3** — product pages ship no product data in the HTML.
+3. **BUG-4** — with the API down the shop hangs on "Loading…" and says nothing.
+4. **BUG-2** — out-of-range `?page=` returns an empty page with no message.
+5. **GAP-5** — a lockfile for a package that does not exist; `npm ci` in `sick-fits/` fails.
+6. **GAP-8** — the README's typecheck list is incomplete (2 files missing).
+7. **GAP-7** — "Sick Fits" branding in three components; three different brand spellings; most pages
+   have no `<title>`.
+8. **GAP-6** — two env files disagree on which API the storefront uses.
+9. **GAP-9** — five local artefacts still tracked.
+10. **GAP-10** — the read-access asymmetry is invisible except by calling the API.
+
+---
+
+## 5. How to reproduce this audit
+
+```bash
+nvm use 16.20.2
+git clone https://github.com/Owen5e/TrendyFits.git && cd TrendyFits
+git log -1 --oneline                      # 24e7aa8 on main
+
+# backend (see BUG-1; attempt until it prints "👋 Admin UI and graphQL API ready")
+cd sick-fits/backend && npm ci && npm run dev
+
+# frontend
+cd ../frontend && npm ci && npm run dev   # expect "✓ Ready in ~32s" on :7777
+
+# the checks in §2, then the repro commands in §3
+```
+
+The audit's own logs and probe scripts are in the day's working folder
+(`backend-dev-run*.log`, `frontend-dev-node16.log`, `frontend-test.log`, `backend-tsc.log`,
+`probe-*.sh`).

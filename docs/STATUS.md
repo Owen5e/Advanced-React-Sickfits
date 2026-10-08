@@ -164,11 +164,15 @@ Five attempts, on Node 16, all with `cd sick-fits/backend && npm run dev`:
 
 | Attempt | Result | How long before failure |
 | --- | --- | --- |
-| 1 | **reached `👋 Admin UI and graphQL API ready`**, served GraphQL and `/admin` | ready in ~90 s, then exited code 1 after ~622 s |
+| 1 | **reached `👋 Admin UI and graphQL API ready`**, served GraphQL and `/admin` | ready in ~90 s; then exited code 1 after ~622 s |
 | 2 | never bound `:3000` | exited code 1 after 293 s |
-| 3 | never bound `:3000` | no port after 315 s |
-| 4 (frontend stopped) | never bound `:3000` | no port after 260 s |
-| 5 (`NODE_OPTIONS=--max-old-space-size=4096`) | never bound `:3000` | no port after 240 s |
+| 3 | never bound `:3000` | exited code 1 after ~315 s |
+| 4 (frontend stopped) | never bound `:3000` | exited code 1 after ~260 s |
+| 5 (`NODE_OPTIONS=--max-old-space-size=4096`) | never bound `:3000` | exited code 1 after ~240 s |
+
+**All five attempts terminated with exit code 1. None hung indefinitely** — each was confirmed by the
+process's own exit status, not inferred from a timeout in the log. So this presents as a **silent
+crash**, not a hang: whatever goes wrong takes the process down without printing why.
 
 Attempts 2–5 all stop at the same line and never continue:
 

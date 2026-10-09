@@ -1,0 +1,59 @@
+diff --git a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.dev.js b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.dev.js
+index 163106196..159282710 100644
+--- a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.dev.js
++++ b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.dev.js
+@@ -86,7 +86,7 @@
+ 
+   const configModule = Path__default['default'].join(projectAdminPath, '..', '..', 'keystone');
+   const outputDir = Path__default['default'].join('pages', 'api');
+-  const pathToConfig = Path__default['default'].relative(Path__default['default'].join(projectAdminPath, outputDir), configModule); // this should always exist, the user should not be able to override it.
++  const pathToConfig = Path__default['default'].relative(Path__default['default'].join(projectAdminPath, outputDir), configModule).split(Path__default['default'].sep).join('/'); // this should always exist, the user should not be able to override it. // (separators normalised for Windows: Path.relative() returns backslashes there, and interpolating them raw into the import below yields '........keystone')
+ 
+   baseFiles.push({
+     mode: 'write',
+diff --git a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.prod.js b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.prod.js
+index 212916797..110469641 100644
+--- a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.prod.js
++++ b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.cjs.prod.js
+@@ -86,7 +86,7 @@
+ 
+   const configModule = Path__default['default'].join(projectAdminPath, '..', '..', 'keystone');
+   const outputDir = Path__default['default'].join('pages', 'api');
+-  const pathToConfig = Path__default['default'].relative(Path__default['default'].join(projectAdminPath, outputDir), configModule); // this should always exist, the user should not be able to override it.
++  const pathToConfig = Path__default['default'].relative(Path__default['default'].join(projectAdminPath, outputDir), configModule).split(Path__default['default'].sep).join('/'); // this should always exist, the user should not be able to override it. // (separators normalised for Windows: Path.relative() returns backslashes there, and interpolating them raw into the import below yields '........keystone')
+ 
+   baseFiles.push({
+     mode: 'write',
+diff --git a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.esm.js b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.esm.js
+index 84587491..107445603 100644
+--- a/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.esm.js
++++ b/node_modules/@keystone-next/admin-ui/system/dist/admin-ui.esm.js
+@@ -72,7 +72,7 @@
+ 
+   const configModule = Path.join(projectAdminPath, '..', '..', 'keystone');
+   const outputDir = Path.join('pages', 'api');
+-  const pathToConfig = Path.relative(Path.join(projectAdminPath, outputDir), configModule); // this should always exist, the user should not be able to override it.
++  const pathToConfig = Path.relative(Path.join(projectAdminPath, outputDir), configModule).split(Path.sep).join('/'); // this should always exist, the user should not be able to override it. // (separators normalised for Windows: Path.relative() returns backslashes there, and interpolating them raw into the import below yields '........keystone')
+ 
+   baseFiles.push({
+     mode: 'write',
+diff --git a/node_modules/@keystone-next/admin-ui/src/system/generateAdminUI.ts b/node_modules/@keystone-next/admin-ui/src/system/generateAdminUI.ts
+index 162514855..196530993 100644
+--- a/node_modules/@keystone-next/admin-ui/src/system/generateAdminUI.ts
++++ b/node_modules/@keystone-next/admin-ui/src/system/generateAdminUI.ts
+@@ -74,7 +74,14 @@
+   // FIXME: This path corresponds to the hardcoded value in CONFIG_PATH
+   const configModule = Path.join(projectAdminPath, '..', '..', 'keystone');
+   const outputDir = Path.join('pages', 'api');
+-  const pathToConfig = Path.relative(Path.join(projectAdminPath, outputDir), configModule);
++  // On Windows Path.relative() returns backslash separators. Interpolating them raw
++  // into an ES import specifier makes JavaScript read them as string escapes, so
++  // '../../../../keystone' is written out as '........keystone' and the admin UI build
++  // fails with "Module not found: Can't resolve '........keystone'". Normalise, the
++  // way the user-page loop below already does.
++  const pathToConfig = Path.relative(Path.join(projectAdminPath, outputDir), configModule)
++    .split(Path.sep)
++    .join('/');
+   // this should always exist, the user should not be able to override it.
+   baseFiles.push({
+     mode: 'write',

@@ -6,6 +6,9 @@ exactly as the root README instructs, as a stranger with no prior knowledge of t
 Every claim below carries a repro step and the observed output.
 **Audited commit:** `24e7aa8` — "docs(readme): add root README — what/why/stack/run/deploy for the
 two-package monorepo" (2026-10-06)
+**Updated:** 2026-10-09 (Day 17) — BUG-1 is now split into a fixed half (BUG-1a: the admin UI did
+not build on Windows) and an open one (BUG-1b: the dev server can exit code 1 with no message).
+See §3.
 
 ---
 
@@ -158,53 +161,138 @@ Time:        98.059 s
 
 ## 3. Bugs, gaps and unknowns
 
-### BUG-1 — the backend dev server usually does not come up (SEVERITY: blocking)
+### BUG-1 — the admin UI will not build on Windows, and the dev server can still die silently (SEVERITY: blocking)
 
-Five attempts, on Node 16, all with `cd sick-fits/backend && npm run dev`:
+**Updated 2026-10-09 (Day 17).** The original day-16 entry is kept at the end of this section for the
+record. This is what the follow-up investigation found: one half of BUG-1 is now fixed and covered by
+a regression test, the other half is re-measured, corrected, and still open.
+
+#### BUG-1a — FIXED (2026-10-09): the generated admin-UI api module imports a path that cannot resolve on Windows
+
+Keystone generates `.keystone/admin/pages/api/__keystone_api_build.js`, whose whole job is to
+re-export the project's Keystone config:
+
+```js
+export { default as config } from '<path from this file to backend/keystone>';
+```
+
+`@keystone-next/admin-ui` 8.0.2 builds that path with `Path.relative()`, which returns **backslash**
+separators on Windows, and interpolates the result into the import specifier without normalising it
+(the sibling code path 20 lines below *does* normalise — for user-supplied admin pages). JavaScript
+reads `..\..\..\..\keystone` as a string with escape sequences, so the specifier actually written to
+the file is:
+
+```js
+export { default as config } from '........keystone';
+```
+
+Repro on Windows, Node 16.20.2, before the fix:
+
+```bash
+cd sick-fits/backend && npm run build
+# ✨ Building Admin UI
+# info  - Creating an optimized production build...
+# Failed to compile.
+# ModuleNotFoundError: Module not found: Error: Can't resolve '........keystone' in
+#   '...\sick-fits\backend\.keystone\admin\pages\api'
+# Error: > Build failed because of webpack errors
+# exit code 1
+```
+
+So `npm run build` — and therefore `npm run start`, the production command the README documents —
+failed outright on Windows. CI could not see it: the backend job runs on `ubuntu-latest`, where
+`Path.relative()` already returns forward slashes.
+
+**Fix:** `sick-fits/backend/patches/@keystone-next+admin-ui+8.0.2.patch`, applied automatically by
+`patch-package` from the package's `postinstall` hook — `npm ci` is still all anyone has to do. It
+normalises the separators the way the same function already does for user pages, in all three shipped
+builds (cjs dev, cjs prod, esm) and in the TypeScript source.
+
+**Regression test:** `npm run test:admin-ui-import` (`sick-fits/backend/test/admin-ui-api-import.test.js`,
+no framework, no new dependency). It reads the generated module and asserts the specifier is a
+relative POSIX path that resolves to `keystone.ts` on disk. Observed:
+
+```
+before the patch   FAIL: the generated import specifier is "........keystone", …
+after  the patch   PASS: __keystone_api_build.js imports '../../../../keystone' -> …\backend\keystone.ts
+```
+
+#### BUG-1b — NOT FIXED: the dev server can exit with code 1 and print nothing
+
+The day-16 entry recorded five attempts of which one came up. Re-measured on 2026-10-09:
+
+| Attempt | Command | Result |
+| --- | --- | --- |
+| 6 (clean `.keystone`) | `PORT=3100 npm run dev` | **reached ready**, `{"ready":true}`, in **~470 s**; `/signin` 200, `/admin` 302, API 200 |
+| 7 | `npm run dev` (port 3000 contended) | **died silently, exit code 1**, during the admin-UI compile — after `Browserslist…`, before `event - compiled successfully` |
+
+Attempt 6's numbers, for anyone planning around this: port bound at ~280 s, admin-UI compile (the
+long pole) ~190 s, peak working set ~700 MB during the compile falling to ~405 MB once up. That is
+5× the "ready in ~90 s" the root README implies, and it is the likeliest reason the day-16 attempts
+were declared dead: they were polled for 240–300 s.
+
+Attempt 7 is the interesting one — it reproduces the day-16 signature exactly (exit 1, no error, no
+stack, no marker, inside the compile) and it is the only run made while another process held `:3000`.
+
+Windows' own leak detector also noticed this process on day 16: Application log, WER event 1001,
+`Event Name: RADAR_PRE_LEAK_64`, `P1: node.exe`, `P2: 16.20.2.0`, **2026-10-08 17:49:39**. Mind what
+that is and is not: it is the OS reporting *rapid memory growth*, not a crash report. There is no
+`Application Error` (event 1000) for node.exe anywhere in that window, so nothing in the event log
+records the process dying.
+
+**Correction to the day-16 record.** Attempts 2–5 are written up as "never bound `:3000`". Their own
+logs contradict that: every one of them contains `⭐️ Dev Server Ready on http://localhost:3000`,
+which is printed from `server.listen`'s success callback, and the lines after it (`✨ Preparing
+Next.js app`, the Browserslist and babel notices) only run while Keystone is initialising. What
+actually happened is that they bound the port, got as far as the admin-UI compile and died there.
+That distinction matters to a reproducer: "never bound" sends you looking at the port, the real
+failure is in the compile.
+
+**Port note for this machine.** `:3000` is now permanently occupied by the Hermes WhatsApp bridge,
+and Node sets `SO_REUSEADDR` on Windows — so Keystone's `listen(3000)` **succeeds anyway** (Keystone
+binds the wildcard address, the bridge holds `127.0.0.1`) and you get no EADDRINUSE to notice. Use
+`PORT=3001 npm run dev` and confirm with `netstat -ano | grep LISTENING | grep :3000`.
+
+**Ruled out for the silent exit:** heap exhaustion (4 GB made no difference on day 16, and the
+process peaks near 700 MB), the frontend dev server, and — from day 17 — the malformed import of
+BUG-1a: that module is not compiled during a dev start, and attempt 6 came up and served traffic with
+the malformed file still on disk.
+**Still open:** why the same compile takes ~3 minutes and succeeds on one run and kills the process
+on another, and whether Windows' leak detector is the thing that terminates it.
+
+---
+
+<details>
+<summary>Original day-16 entry (2026-10-08), kept for the record</summary>
+
+The backend dev server usually does not come up (SEVERITY: blocking) — five attempts, on Node 16, all
+with `cd sick-fits/backend && npm run dev`:
 
 | Attempt | Result | How long before failure |
 | --- | --- | --- |
 | 1 | **reached `👋 Admin UI and graphQL API ready`**, served GraphQL and `/admin` | ready in ~90 s; then exited code 1 after ~622 s |
-| 2 | never bound `:3000` | exited code 1 after 293 s |
-| 3 | never bound `:3000` | exited code 1 after ~315 s |
-| 4 (frontend stopped) | never bound `:3000` | exited code 1 after ~260 s |
-| 5 (`NODE_OPTIONS=--max-old-space-size=4096`) | never bound `:3000` | exited code 1 after ~240 s |
+| 2 | never bound `:3000` (see the correction above — it did) | exited code 1 after 293 s |
+| 3 | never bound `:3000` (see above) | exited code 1 after ~315 s |
+| 4 (frontend stopped) | never bound `:3000` (see above) | exited code 1 after ~260 s |
+| 5 (`NODE_OPTIONS=--max-old-space-size=4096`) | never bound `:3000` (see above) | exited code 1 after ~240 s |
 
-**All five attempts terminated with exit code 1. None hung indefinitely** — each was confirmed by the
-process's own exit status, not inferred from a timeout in the log. So this presents as a **silent
-crash**, not a hang: whatever goes wrong takes the process down without printing why.
+All five attempts terminated with exit code 1. None hung indefinitely — each was confirmed by the
+process's own exit status, not inferred from a timeout in the log. So this presents as a silent
+crash, not a hang.
 
-Attempts 2–5 all stop at the same line and never continue:
+Ruled out by experiment: insufficient heap (4 GB made no difference), contention from the frontend dev
+server (it still failed with the frontend stopped).
+Not yet ruled out at the time: the OneDrive-synced folder, a stale `.keystone/` admin build cache, a
+Keystone 5.9.3.1 admin-UI Next 10 build quirk on Node 16.
+Actionable suggestion then: clone to a path outside OneDrive, delete `sick-fits/backend/.keystone`
+between attempts.
 
-```
-✨ Preparing Next.js app
-Browserslist: caniuse-lite is outdated. Please run:
-npx browserslist@latest --update-db
-(node:NNNNN) [DEP0148] DeprecationWarning: Use of deprecated folder mapping "./" in the "exports"
-field module resolution of the package at .../node_modules/@keystone-next/admin-ui/node_modules/postcss/package.json.
-info  - Using external babel configuration from .../sick-fits/backend/package.json
-```
+Day-17 note on those two suggestions: no `node_modules` file under `sick-fits/backend` carries the
+OneDrive "offline"/"recall on data access" attribute (checked with
+`[System.IO.File]::GetAttributes`), so the folder is not being dehydrated; and attempts 6 and 7 both
+ran against a deleted `.keystone/`, which did not make the compile reliable on its own.
 
-…and then the process is gone. **No error, no stack, no non-zero exit message is printed** — the log
-simply ends. Attempt 1 got past the same point with `event - compiled successfully`.
-
-Repro:
-
-```bash
-nvm use 16.20.2
-cd sick-fits/backend && npm run dev
-# watch for the two "Preparing Next.js app" / "Using external babel configuration" lines,
-# then check whether :3000 ever binds:
-netstat -ano | grep LISTENING | grep :3000
-```
-
-**Ruled out by experiment:** insufficient heap (4 GB made no difference), and contention from the
-frontend dev server (it still failed with the frontend stopped).
-**Not yet ruled out:** the repo sitting in a **OneDrive-synced folder** (`OneDrive.Sync.Service.exe`
-is running on the machine), a stale `.keystone/` admin build cache, and a Keystone 5.9.3.1 admin-UI
-Next 10 build quirk on Node 16.
-**Actionable suggestion:** clone to a path outside OneDrive before concluding anything, and delete
-`sick-fits/backend/.keystone` between attempts.
+</details>
 
 ### BUG-2 — `/products?page=N` has no upper bound
 
@@ -416,25 +504,34 @@ a browser was not confirmed, because the API would not stay up long enough to ho
 
 ### Unknown-3 — why does the backend exit with code 1 and no message?
 
-See BUG-1. Nothing in the log explains it, and the process does not print an error. Keystone 5 is
+See BUG-1b. Nothing in the log explains it, and the process does not print an error. Keystone 5 is
 unmaintained and the Mongo connection is to an Atlas cluster; an unhandled rejection on a dropped
 connection is a plausible mechanism, but that is a guess, not a finding.
+
+**Day 17 (2026-10-09):** one more run died the same way (exit code 1, no output, during the admin-UI
+compile) while every other run of the same command came up — so it is intermittent, not deterministic,
+and the mechanism is still unknown. What day 17 did remove from the list of suspects is the malformed
+admin-UI import of BUG-1a: that module is not compiled during a dev start, and a run with the
+malformed file still on disk reached ready and served traffic. See BUG-1b for the measurements.
 
 ---
 
 ## 4. Summary
 
-**Startable?** The frontend: yes, reliably, in ~32 s. The backend: once out of five attempts.
-Until BUG-1 is understood, the honest answer to "can someone else start both services from this
-document alone" is **no** — the document can describe the startup, but the backend will not
-dependably reach it.
+**Startable?** The frontend: yes, reliably, in ~32 s. The backend: `npm run build` now succeeds on
+Windows (BUG-1a, fixed 2026-10-09), so the documented `npm run start` production path works; on a
+clean cache a dev start took **~8 minutes** in the day-17 measurement, and one run in three still
+died with exit code 1 and no message (BUG-1b). So the honest answer to "can someone else start
+both services from this document alone" is **yes — if the time expectation is minutes, not the
+~90 s the root README implies** — and with BUG-1b named as the thing that can still stop you.
 
 **Verified working:** the GraphQL API with 67 real products, the server-rendered catalogue with
 pagination across 6 pages, categories, the admin route, and a green 29-test suite.
 
 **Broken or risky, in priority order:**
 
-1. **BUG-1** — backend dev server unreliable, no diagnostic (blocking).
+1. **BUG-1b** — the backend dev server can exit code 1 printing nothing, during the admin-UI
+   compile; a clean start also measured ~8 minutes, not the ~90 s the README implies (blocking, open).
 2. **BUG-3** — product pages ship no product data in the HTML.
 3. **BUG-4** — with the API down the shop hangs on "Loading…" and says nothing.
 4. **BUG-2** — out-of-range `?page=` returns an empty page with no message.
@@ -445,6 +542,9 @@ pagination across 6 pages, categories, the admin route, and a green 29-test suit
 8. **GAP-6** — two env files disagree on which API the storefront uses.
 9. **GAP-9** — five local artefacts still tracked.
 10. **GAP-10** — the read-access asymmetry is invisible except by calling the API.
+11. ~~**BUG-1a**~~ — the admin UI would not build on Windows at all
+    (`Can't resolve '........keystone'`), so `npm run build`/`npm run start` failed outright.
+    **Fixed 2026-10-09** — patch-package patch + `npm run test:admin-ui-import`.
 
 ---
 
@@ -467,3 +567,17 @@ cd ../frontend && npm ci && npm run dev   # expect "✓ Ready in ~32s" on :7777
 The audit's own logs and probe scripts are in the day's working folder
 (`backend-dev-run*.log`, `frontend-dev-node16.log`, `frontend-test.log`, `backend-tsc.log`,
 `probe-*.sh`).
+
+### Reproducing the BUG-1a fix (Day 17, 2026-10-09)
+
+```bash
+cd sick-fits/backend
+npm ci                          # postinstall runs patch-package, which applies patches/
+npm run build                   # BEFORE the fix: "Module not found: Can't resolve '........keystone'", exit 1
+                                # AFTER  the fix: completes
+npm run test:admin-ui-import    # BEFORE: FAIL … "........keystone"   AFTER: PASS … '../../../../keystone'
+PORT=3100 npm run start         # the production command; 3100 because :3000 is held on this machine
+```
+
+Day-17 artefacts (logs, probe scripts, the pristine package copies the patch was cut from) are in
+`C:\Users\olada\dev\day17-2026-10-09`.
